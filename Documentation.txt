@@ -1,0 +1,78 @@
+PRINT STATEMENTS:
+The "print" keyword will output whatever value comes after it. The value can 
+either be a literal string or a string variable. Outputting other variable types TBD
+Example:
+print "hello world"
+
+a = "hello world"
+print a
+
+ASSIGN STATEMENTS:
+To assign values to a variable, first have a variable you would like to assign followed an equals sign.
+What comes after the equals sign can either be a value, another variable, or an expression. 
+Example:
+a = 5 + 6
+a = b
+a = 5
+
+
+IF/IF-ELSE STATEMENTS:
+The "if" keyword should be followed by a condition. If the condition is true, the body that follows 
+the condition will be executed. An else statement is optional. However, if one chooses to use it,
+it must be immediately after an if statement. To have an else statement use the "else" keyword
+followed by a body. The body will be executed if the condition of the if statement is false.
+The body must start and end with curly braces: '{'.
+
+Example:
+if x == 4
+{
+	print ( "x is 4" )
+}
+
+if x == 4
+{
+	print ( "x is 4" )
+}
+else
+{
+	print ( "x is not 4" )
+}
+
+FOR LOOP:
+There are two types of for loops all use the "for" keyword.
+The first type has the "for" keyword followed by a set of statemments that are enclosed by parentheses 
+and each statement separated by commas: (assign statement, conditional statement, step). The first statement
+is an assign statement that assigns a value to the increment variable. That increment variable will be checked
+against the conditional statement and if it holds true, the body will be executed. The variable is then incremented
+by the step value. 
+The second type has the "for" keyword followed by a range in which you would like to loop through: <starting value> to <ending value>.
+That range will be followed by the "with" keyword and the variable that will be the increment variable.
+
+Example:
+for(i = 0, i <= 6, 2 )
+{
+	print ( i ) 
+}
+
+Output:
+0
+2
+4
+6
+
+In the example above, the increment variable, i, is initialized to 0 and the loop will run until 
+i==6 returns false. The value of i will be incremented by 2.
+
+for 1 to 6 with i
+{
+	print ( i )
+}
+Output:
+1
+2
+3
+4
+5
+6
+
+In the example above, the loop loops from 1 to 6 and making the increment variable i. 

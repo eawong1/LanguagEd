@@ -1,0 +1,19 @@
+
+program -> program_body
+program_body -> stmt_list
+stmt_list -> stmt stmt_list | stmt
+stmt -> print_stmt | assign_stmt | if_stmt | for_loop 
+print_stmt -> PRINT print_line 
+assign_stmt -> ID EQUALS arithmetic | ID EQUALS STRING
+if_stmt -> IF condition body | IF condition body else_stmt
+else_stmt -> ELSE body
+for_loop -> FOR LPARENTHESES for_stmt RPARENTHESES body | FOR primary TO primary WITH ID body
+print_line -> ID | QUOTE STRING QUOTE
+arithmetic -> primary | primary op primary
+condition -> ID relop primary
+body -> OCURLY stmt_list CCURLY
+for_stmt -> assign_stmt COMMA condition COMMA NUM
+
+
+
+
