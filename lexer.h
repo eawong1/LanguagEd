@@ -13,7 +13,8 @@ typedef enum
 class Lexer
 {
     private:
-        string readInput(string line);
+        // string readInput(string line);
+        
 
     public:
         struct Token
@@ -22,6 +23,9 @@ class Lexer
             TokenType tokenType; 
         };
 
+        void setFile(string file);
+        void openFile();
+        bool readLine();
         Token getToken();
         Token ungetToken(Token token);
 };
