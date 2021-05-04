@@ -73,12 +73,14 @@ bool Lexer::readLine()
         {
             tokens.push(token);
         }
+        return true;
     }
     //closes the file once there is no more lines to read
     else
     {
         // cout << "no more" << endl;
         file.close();
+        return false;
     }
     return false;
 }
@@ -91,6 +93,123 @@ void Lexer::setFile(string file)
 Lexer::Token Lexer::getToken()
 {
     Lexer::Token t;
+    bool lineResult = true;
+    //if tokens stack is empty read the next line and repopulate it 
+    if(tokens.empty())
+    {
+        lineResult = readLine();
+    }
+
+    //if there are still more lines
+    if(lineResult)
+    {
+        t.lexeme = tokens.top();
+
+        if(t.lexeme == "print")
+        {
+            t.tokenType = PRINT;
+        }
+        else if(t.lexeme == "=")
+        {
+            t.tokenType = EQUALS;
+        }
+        //TODO: add something for string here
+        else if(t.lexeme == "if")
+        {
+            t.tokenType = IF;
+        }
+        else if(t.lexeme == "else")
+        {
+            t.tokenType = ELSE;
+        }
+        else if(t.lexeme == "for")
+        {
+            t.tokenType = FOR;
+        }
+        else if(t.lexeme == "(")
+        {
+            t.tokenType = LPARENTHESES;
+        }
+        else if(t.lexeme == ")")
+        {
+            t.tokenType = RPARENTHESES;
+        }
+        else if(t.lexeme == "to")
+        {
+            t.tokenType = TO;
+        }
+        else if(t.lexeme == "with")
+        {
+            t.tokenType = WITH;
+        }
+        else if(t.lexeme == "{")
+        {
+            t.tokenType = OCURLY;
+        }
+        else if(t.lexeme == "}")
+        {
+            t.tokenType = CCURLY;
+        }
+        else if(t.lexeme == ",")
+        {
+            t.tokenType = COMMA;
+        }
+        //if the first char is a number, token is a number
+        else if(int(t.lexeme[0]) >= 48 && int(t.lexeme[0]) <= 57)
+        {
+            t.tokenType = NUM;
+        }
+        else if(t.lexeme == "+")
+        {
+            t.tokenType = PLUS;
+        }
+        else if(t.lexeme == "-")
+        {
+            t.tokenType = MINUS;
+        }
+        else if(t.lexeme == "*")
+        {
+            t.tokenType = MULT;
+        }
+        else if(t.lexeme == "/")
+        {
+            t.tokenType = DIV; 
+        }
+        else if(t.lexeme == ">")
+        {
+            t.tokenType = GREATER;
+        }
+        else if(t.lexeme == "<")
+        {
+            t.tokenType = LESS;
+        }
+        else if(t.lexeme == ">=")
+        {
+            t.tokenType = GREATER_EQUAL;
+        }
+        else if(t.lexeme == "<=")
+        {
+            t.tokenType = LESS_EQUAL;
+        }
+        else if(t.lexeme == "==")
+        {
+            t.tokenType =  EQUALTO;
+        }
+        else if (t.lexeme == "!=")
+        {
+            t.tokenType = NOT_EQUAL;
+        }
+        //if first char is a letter then it is an ID
+        //has to be last because it has to check if it is keyword before checking to see if it is an id
+        else if((int(t.lexeme[0]) >= 65 && int(t.lexeme[0]) <= 90) || (int(t.lexeme[0]) >= 97 && int(t.lexeme[0]) <= 122))
+        {
+            t.tokenType = ID;
+        }
+
+        //pop token from stack 
+        tokens.pop();
+    }
+
 
     return t;
 }
@@ -106,9 +225,56 @@ int main(int argc, char *argv[])
     // lexer.readLine();
     // lexer.readLine();
 
-    while(!tokens.empty())
-    {
-        cout << tokens.top() << endl;
-        tokens.pop();
-    }
+    Lexer::Token t = lexer.getToken(); //a
+    cout << "lexeme: " << t.lexeme << endl;
+    cout << "token type: " << t.tokenType << endl;
+
+    t = lexer.getToken(); // =
+    cout << "lexeme: " << t.lexeme << endl;
+    cout << "token type: " << t.tokenType << endl;
+
+    t = lexer.getToken(); // 1
+    cout << "lexeme: " << t.lexeme << endl;
+    cout << "token type: " << t.tokenType << endl;
+
+    t = lexer.getToken(); // if
+    cout << "lexeme: " << t.lexeme << endl;
+    cout << "token type: " << t.tokenType << endl;
+
+    t = lexer.getToken(); // a
+    cout << "lexeme: " << t.lexeme << endl;
+    cout << "token type: " << t.tokenType << endl;
+
+    t = lexer.getToken(); // ==
+    cout << "lexeme: " << t.lexeme << endl;
+    cout << "token type: " << t.tokenType << endl;
+
+    t = lexer.getToken(); // 1
+    cout << "lexeme: " << t.lexeme << endl;
+    cout << "token type: " << t.tokenType << endl;
+
+    t = lexer.getToken(); //{
+    cout << "lexeme: " << t.lexeme << endl;
+    cout << "token type: " << t.tokenType << endl;
+
+    t = lexer.getToken(); //a
+    cout << "lexeme: " << t.lexeme << endl;
+    cout << "token type: " << t.tokenType << endl;
+
+    t = lexer.getToken(); // =
+    cout << "lexeme: " << t.lexeme << endl;
+    cout << "token type: " << t.tokenType << endl;
+
+    t = lexer.getToken(); //1
+    cout << "lexeme: " << t.lexeme << endl;
+    cout << "token type: " << t.tokenType << endl;
+
+    t = lexer.getToken(); //}
+    cout << "lexeme: " << t.lexeme << endl;
+    cout << "token type: " << t.tokenType << endl;
+    // while(!tokens.empty())
+    // {
+    //     cout << tokens.top() << endl;
+    //     tokens.pop();
+    // }
 }
