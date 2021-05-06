@@ -25,7 +25,7 @@ ID = 2 check
 EQUALS = 3 check
 STRING = 4
 IF = 5 check
-ELSE = 6
+ELSE = 6 check
 FOR = 7
 LPARENTHESES = 8 
 RPARENTHESES = 9
@@ -44,7 +44,7 @@ LESS = 21
 GREATER_EQUAL = 22
 LESS_EQUAL = 23
 EQUALTO = 24 check
-NOT_EQUAL = 25
+NOT_EQUAL = 25 check
 
 
 

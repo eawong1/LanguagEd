@@ -272,6 +272,66 @@ int main(int argc, char *argv[])
     t = lexer.getToken(); //}
     cout << "lexeme: " << t.lexeme << endl;
     cout << "token type: " << t.tokenType << endl;
+
+    t = lexer.getToken(); //else
+    cout << "lexeme: " << t.lexeme << endl;
+    cout << "token type: " << t.tokenType << endl;
+
+    t = lexer.getToken(); //{
+    cout << "lexeme: " << t.lexeme << endl;
+    cout << "token type: " << t.tokenType << endl;
+
+    t = lexer.getToken(); //a
+    cout << "lexeme: " << t.lexeme << endl;
+    cout << "token type: " << t.tokenType << endl;
+
+    t = lexer.getToken(); //=
+    cout << "lexeme: " << t.lexeme << endl;
+    cout << "token type: " << t.tokenType << endl;
+
+    t = lexer.getToken(); //2
+    cout << "lexeme: " << t.lexeme << endl;
+    cout << "token type: " << t.tokenType << endl;
+    
+    t = lexer.getToken(); //}
+    cout << "lexeme: " << t.lexeme << endl;
+    cout << "token type: " << t.tokenType << endl;
+
+    t = lexer.getToken(); //if
+    cout << "lexeme: " << t.lexeme << endl;
+    cout << "token type: " << t.tokenType << endl;
+
+    t = lexer.getToken(); //a
+    cout << "lexeme: " << t.lexeme << endl;
+    cout << "token type: " << t.tokenType << endl;
+
+    t = lexer.getToken(); //!=
+    cout << "lexeme: " << t.lexeme << endl;
+    cout << "token type: " << t.tokenType << endl;
+
+    t = lexer.getToken(); //1
+    cout << "lexeme: " << t.lexeme << endl;
+    cout << "token type: " << t.tokenType << endl;
+
+    t = lexer.getToken(); //{
+    cout << "lexeme: " << t.lexeme << endl;
+    cout << "token type: " << t.tokenType << endl;
+
+    t = lexer.getToken(); //a
+    cout << "lexeme: " << t.lexeme << endl;
+    cout << "token type: " << t.tokenType << endl;
+
+    t = lexer.getToken(); //=
+    cout << "lexeme: " << t.lexeme << endl;
+    cout << "token type: " << t.tokenType << endl;
+
+    t = lexer.getToken(); //3
+    cout << "lexeme: " << t.lexeme << endl;
+    cout << "token type: " << t.tokenType << endl;
+
+    t = lexer.getToken(); //}
+    cout << "lexeme: " << t.lexeme << endl;
+    cout << "token type: " << t.tokenType << endl;
     // while(!tokens.empty())
     // {
     //     cout << tokens.top() << endl;
