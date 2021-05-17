@@ -19,32 +19,32 @@ relop -> GREATER | LESS | GREATER_EQUAL | LESS_EQUAL | EQUALTO | NOT_EQUAL
 
 
 Enumerations:
-END_OF_FILE = 0, check
-PRINT = 1
-ID = 2 check
-EQUALS = 3 check
-STRING = 4
-IF = 5 check
-ELSE = 6 check
-FOR = 7
-LPARENTHESES = 8 
-RPARENTHESES = 9
-TO = 10
-WITH = 11
-OCURLY = 12 check
-CCURLY = 13 check
-COMMA = 14
-NUM = 15 check
-PLUS = 16
-MINUS = 17 
-MULT = 18
-DIV = 19
-GREATER = 20 
-LESS = 21
-GREATER_EQUAL = 22
-LESS_EQUAL = 23
-EQUALTO = 24 check
-NOT_EQUAL = 25 check
+END_OF_FILE = 0,	check
+PRINT = 1			check
+ID = 2 				check
+EQUALS = 3 			check
+STRING = 4			check
+IF = 5 				check
+ELSE = 6 			check
+FOR = 7 			check
+LPARENTHESES = 8 	check
+RPARENTHESES = 9 	check
+TO = 10 			check
+WITH = 11 			check
+OCURLY = 12 		check
+CCURLY = 13 		check
+COMMA = 14 			check
+NUM = 15 			check
+PLUS = 16			check
+MINUS = 17 			check
+MULT = 18			check
+DIV = 19			check
+GREATER = 20 		check
+LESS = 21			check
+GREATER_EQUAL = 22	check
+LESS_EQUAL = 23 	check
+EQUALTO = 24 		check
+NOT_EQUAL = 25 		check
 
 
 

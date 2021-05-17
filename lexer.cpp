@@ -113,7 +113,10 @@ Lexer::Token Lexer::getToken()
         {
             t.tokenType = EQUALS;
         }
-        //TODO: add something for string here
+        else if(t.lexeme[0] == '\"')
+        {
+            t.tokenType = STRING;
+        }
         else if(t.lexeme == "if")
         {
             t.tokenType = IF;
@@ -214,122 +217,55 @@ Lexer::Token Lexer::getToken()
     return t;
 }
 
+Lexer::Token Lexer::ungetToken(Lexer::Token token)
+{
+    tokens.push(token.lexeme);
+}
+
 //TESTING PURPOSES:
 int main(int argc, char *argv[])
 {
     Lexer lexer;
-    lexer.setFile("test.txt");
+    lexer.setFile("test3.txt");
     lexer.openFile();
     lexer.readLine();
     cout << endl;
     // lexer.readLine();
     // lexer.readLine();
 
-    Lexer::Token t = lexer.getToken(); //a
+    Lexer::Token t = lexer.getToken(); //for
     cout << "lexeme: " << t.lexeme << endl;
     cout << "token type: " << t.tokenType << endl;
 
-    t = lexer.getToken(); // =
+    t = lexer.getToken(); //(
     cout << "lexeme: " << t.lexeme << endl;
     cout << "token type: " << t.tokenType << endl;
 
-    t = lexer.getToken(); // 1
+    t = lexer.getToken(); //(
     cout << "lexeme: " << t.lexeme << endl;
     cout << "token type: " << t.tokenType << endl;
 
-    t = lexer.getToken(); // if
+    t = lexer.getToken(); //(
     cout << "lexeme: " << t.lexeme << endl;
     cout << "token type: " << t.tokenType << endl;
 
-    t = lexer.getToken(); // a
+    t = lexer.getToken(); //(
     cout << "lexeme: " << t.lexeme << endl;
     cout << "token type: " << t.tokenType << endl;
 
-    t = lexer.getToken(); // ==
+    t = lexer.getToken(); //(
     cout << "lexeme: " << t.lexeme << endl;
     cout << "token type: " << t.tokenType << endl;
 
-    t = lexer.getToken(); // 1
+    t = lexer.getToken(); //(
     cout << "lexeme: " << t.lexeme << endl;
     cout << "token type: " << t.tokenType << endl;
 
-    t = lexer.getToken(); //{
+    t = lexer.getToken(); //(
     cout << "lexeme: " << t.lexeme << endl;
     cout << "token type: " << t.tokenType << endl;
 
-    t = lexer.getToken(); //a
-    cout << "lexeme: " << t.lexeme << endl;
-    cout << "token type: " << t.tokenType << endl;
-
-    t = lexer.getToken(); // =
-    cout << "lexeme: " << t.lexeme << endl;
-    cout << "token type: " << t.tokenType << endl;
-
-    t = lexer.getToken(); //1
-    cout << "lexeme: " << t.lexeme << endl;
-    cout << "token type: " << t.tokenType << endl;
-
-    t = lexer.getToken(); //}
-    cout << "lexeme: " << t.lexeme << endl;
-    cout << "token type: " << t.tokenType << endl;
-
-    t = lexer.getToken(); //else
-    cout << "lexeme: " << t.lexeme << endl;
-    cout << "token type: " << t.tokenType << endl;
-
-    t = lexer.getToken(); //{
-    cout << "lexeme: " << t.lexeme << endl;
-    cout << "token type: " << t.tokenType << endl;
-
-    t = lexer.getToken(); //a
-    cout << "lexeme: " << t.lexeme << endl;
-    cout << "token type: " << t.tokenType << endl;
-
-    t = lexer.getToken(); //=
-    cout << "lexeme: " << t.lexeme << endl;
-    cout << "token type: " << t.tokenType << endl;
-
-    t = lexer.getToken(); //2
-    cout << "lexeme: " << t.lexeme << endl;
-    cout << "token type: " << t.tokenType << endl;
-    
-    t = lexer.getToken(); //}
-    cout << "lexeme: " << t.lexeme << endl;
-    cout << "token type: " << t.tokenType << endl;
-
-    t = lexer.getToken(); //if
-    cout << "lexeme: " << t.lexeme << endl;
-    cout << "token type: " << t.tokenType << endl;
-
-    t = lexer.getToken(); //a
-    cout << "lexeme: " << t.lexeme << endl;
-    cout << "token type: " << t.tokenType << endl;
-
-    t = lexer.getToken(); //!=
-    cout << "lexeme: " << t.lexeme << endl;
-    cout << "token type: " << t.tokenType << endl;
-
-    t = lexer.getToken(); //1
-    cout << "lexeme: " << t.lexeme << endl;
-    cout << "token type: " << t.tokenType << endl;
-
-    t = lexer.getToken(); //{
-    cout << "lexeme: " << t.lexeme << endl;
-    cout << "token type: " << t.tokenType << endl;
-
-    t = lexer.getToken(); //a
-    cout << "lexeme: " << t.lexeme << endl;
-    cout << "token type: " << t.tokenType << endl;
-
-    t = lexer.getToken(); //=
-    cout << "lexeme: " << t.lexeme << endl;
-    cout << "token type: " << t.tokenType << endl;
-
-    t = lexer.getToken(); //3
-    cout << "lexeme: " << t.lexeme << endl;
-    cout << "token type: " << t.tokenType << endl;
-
-    t = lexer.getToken(); //}
+    t = lexer.getToken(); //(
     cout << "lexeme: " << t.lexeme << endl;
     cout << "token type: " << t.tokenType << endl;
     // while(!tokens.empty())

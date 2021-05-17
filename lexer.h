@@ -1,3 +1,6 @@
+#ifndef LEXER
+#define LEXER
+
 #include <iostream>
 #include <string>
 
@@ -31,3 +34,5 @@ class Lexer
         Token getToken();
         Token ungetToken(Token token);
 };
+
+#endif LEXER

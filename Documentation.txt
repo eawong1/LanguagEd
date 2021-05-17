@@ -2,9 +2,9 @@ PRINT STATEMENTS:
 The "print" keyword will output whatever value comes after it. The value can 
 either be a literal string or a string variable. Outputting other variable types TBD
 Example:
-print "hello world"
+print "hello_world"
 
-a = "hello world"
+a = "hello_world"
 print a
 
 ASSIGN STATEMENTS:
@@ -26,16 +26,16 @@ The body must start and end with curly braces: '{'.
 Example:
 if x == 4
 {
-	print ( "x is 4" )
+	print "x_is_4" 
 }
 
 if x == 4
 {
-	print ( "x is 4" )
+	print "x_is_4" 
 }
 else
 {
-	print ( "x is not 4" )
+	print "x_is_not_4" 
 }
 
 FOR LOOP:
@@ -51,7 +51,7 @@ That range will be followed by the "with" keyword and the variable that will be 
 Example:
 for(i = 0, i <= 6, 2 )
 {
-	print ( i ) 
+	print i 
 }
 
 Output:
@@ -65,7 +65,7 @@ i==6 returns false. The value of i will be incremented by 2.
 
 for 1 to 6 with i
 {
-	print ( i )
+	print i 
 }
 Output:
 1
