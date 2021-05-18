@@ -1,5 +1,7 @@
-it gets here: program
-it gets here: program_body
-it gets here: stmt_list
-it gets here: stmt
-it gets here: assign_stmt
+program
+program_body
+stmt_list
+stmt
+assign_stmt
+arithmetic
+primary

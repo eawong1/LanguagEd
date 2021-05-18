@@ -220,6 +220,7 @@ Lexer::Token Lexer::getToken()
 Lexer::Token Lexer::ungetToken(Lexer::Token token)
 {
     tokens.push(token.lexeme);
+    return token;
 }
 
 //TESTING PURPOSES:

@@ -8,7 +8,7 @@ using namespace std;
 
 void parserDebug(string method)
 {
-    cout << "it gets here: " << method << endl;
+    cout << method << endl;
 }
 
 void Parser::syntax_error()
