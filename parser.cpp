@@ -280,43 +280,6 @@ void Parser::body()
     }
 }
 
-void Parser::condition()
-{
-    parserDebug("condition");
-
-    Lexer lexer;
-    Lexer::Token t = lexer.getToken();
-
-    if (t.tokenType != ID)
-    {
-        syntax_error();
-    }
-
-    relop();
-    primary();
-}
-
-void Parser::body()
-{
-    parserDebug("body");
-
-    Lexer lexer;
-    Lexer::Token t = lexer.getToken();
-
-    if (t.tokenType != OCURLY)
-    {
-        syntax_error();
-    }
-
-    stmt_list();
-
-    t = lexer.getToken();
-    if (t.tokenType != CCURLY)
-    {
-        syntax_error();
-    }
-}
-
 void Parser::for_stmt()
 {
     parserDebug("for_stmt");
