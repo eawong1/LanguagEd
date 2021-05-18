@@ -3,5 +3,3 @@ it gets here: program_body
 it gets here: stmt_list
 it gets here: stmt
 it gets here: assign_stmt
-it gets here: arithmetic 
-it gets here: primary
