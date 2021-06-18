@@ -4,12 +4,15 @@ import subprocess
 import sys
 
 
+# sys.stdout = open('log.txt', 'w') //changes stdout to logfile 
+
 os.chdir('..') #changes process' directory to parent directory
 
 testFile = sys.argv[1] #takes in the first argument as the testFile
 
 #runs the exe with the given test file and saves the output in output.txt
 subprocess.run('languagEd.exe testCases/' + testFile + ' > testCases/output.txt', shell = True) #runs the exe in the parent directory
+
 
 #reads the output of the exe and stores it in outputLines var
 file = open('testCases/output.txt', 'r')
@@ -34,8 +37,11 @@ else:
     lines = ansLines
     otherLines = outputLines
 
+match = True
+
 #if the number of lines do not match 
 if len(ansLines) != len(outputLines):
+    match = False
     print('ERROR NUMBER OF LINES DO NOT MATCH')
     print('\tYour output has ' + str(len(outputLines)))
     print('\tThe answer has ' + str(len(ansLines)))
@@ -49,7 +55,6 @@ if len(ansLines) != len(outputLines):
 print()
 
 #checks to see if the lines that are present match or not 
-match = True
 for index, filelines in enumerate(otherLines):
     if filelines != lines[index]:
         match = False
@@ -61,6 +66,8 @@ print()
 
 if match:
     print('PASSED LINE TEST')
+
+sys.stdout.close()
 
 
 

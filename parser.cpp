@@ -46,6 +46,7 @@ void Parser::stmt_list()
     stmt();
 
     Lexer::Token t = peek();
+    cout << ""; //flush out null terminator string from stack 
     if (t.tokenType == PRINT || t.tokenType == ID || t.tokenType == IF || t.tokenType == FOR)
     {
         stmt_list();

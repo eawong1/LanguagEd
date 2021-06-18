@@ -29,6 +29,16 @@ ifstream file;
 //     return word;
 // }
 
+bool isNullTerminator(char check)
+{
+    cout << "null terminator" << endl;
+    if(int(check) == 0)
+    {
+        return true;
+    }
+    return false;
+}
+
 //splits the string based on the delimited and returns a vector with the splitted values 
 vector<string> split(string line, string delimiter)
 {
@@ -64,7 +74,7 @@ bool Lexer::readLine()
     string line;
     vector<string> splitted;
     //return 'file' and file evalutes to true when previous read was successful 
-    if(getline(file, line))
+    if(file.is_open() && getline(file, line))
     {
         splitted = split(line, " ");
         //stack is LIFO so have to insert in reverse order
@@ -78,7 +88,6 @@ bool Lexer::readLine()
     //closes the file once there is no more lines to read
     else
     {
-        // cout << "no more" << endl;
         file.close();
         return false;
     }
@@ -94,16 +103,21 @@ Lexer::Token Lexer::getToken()
 {
     Lexer::Token t;
     bool lineResult = true;
+
+    stack<string> temp = tokens;
+
     //if tokens stack is empty read the next line and repopulate it 
     if(tokens.empty())
     {
         lineResult = readLine();
     }
 
+
     //if there are still more lines
-    if(lineResult)
+    if(lineResult /*&& !isNullTerminator(tokens.top()[0])*/)
     {
         t.lexeme = tokens.top();
+        // cout << "Top: " << t.lexeme << endl;
 
         if(t.lexeme == "print")
         {
@@ -211,6 +225,7 @@ Lexer::Token Lexer::getToken()
 
         //pop token from stack 
         tokens.pop();
+
     }
 
 
