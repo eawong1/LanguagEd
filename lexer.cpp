@@ -15,20 +15,6 @@ string scriptFile;
 ifstream file;
 
 
-// string Lexer::readInput(string line)
-// {
-//     string word = "";
-    
-//     int i = 0;
-//     while(line[i] != ' ')
-//     {
-//         word = word + line[i];
-//         i++;
-//     }
-
-//     return word;
-// }
-
 bool isNullTerminator(char check)
 {
     cout << "null terminator" << endl;
@@ -237,56 +223,3 @@ Lexer::Token Lexer::ungetToken(Lexer::Token token)
     tokens.push(token.lexeme);
     return token;
 }
-
-//TESTING PURPOSES:
-// int main(int argc, char *argv[])
-// {
-//     Lexer lexer;
-//     lexer.setFile("test3.txt");
-//     lexer.openFile();
-//     lexer.readLine();
-//     cout << endl;
-//     // lexer.readLine();
-//     // lexer.readLine();
-
-//     Lexer::Token t = lexer.getToken(); //for
-//     cout << "lexeme: " << t.lexeme << endl;
-//     cout << "token type: " << t.tokenType << endl;
-
-//     t = lexer.getToken(); //(
-//     cout << "lexeme: " << t.lexeme << endl;
-//     cout << "token type: " << t.tokenType << endl;
-
-//     t = lexer.getToken(); //(
-//     cout << "lexeme: " << t.lexeme << endl;
-//     cout << "token type: " << t.tokenType << endl;
-
-//     t = lexer.getToken(); //(
-//     cout << "lexeme: " << t.lexeme << endl;
-//     cout << "token type: " << t.tokenType << endl;
-
-//     t = lexer.getToken(); //(
-//     cout << "lexeme: " << t.lexeme << endl;
-//     cout << "token type: " << t.tokenType << endl;
-
-//     t = lexer.getToken(); //(
-//     cout << "lexeme: " << t.lexeme << endl;
-//     cout << "token type: " << t.tokenType << endl;
-
-//     t = lexer.getToken(); //(
-//     cout << "lexeme: " << t.lexeme << endl;
-//     cout << "token type: " << t.tokenType << endl;
-
-//     t = lexer.getToken(); //(
-//     cout << "lexeme: " << t.lexeme << endl;
-//     cout << "token type: " << t.tokenType << endl;
-
-//     t = lexer.getToken(); //(
-//     cout << "lexeme: " << t.lexeme << endl;
-//     cout << "token type: " << t.tokenType << endl;
-//     // while(!tokens.empty())
-//     // {
-//     //     cout << tokens.top() << endl;
-//     //     tokens.pop();
-//     // }
-// }

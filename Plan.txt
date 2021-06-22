@@ -2,3 +2,11 @@ Have different versions of language. Each version being it's own branch and the 
 
 Version 1:
 Implement print statements, if statements, for loops, and simple arithmetic features 
+
+
+Variables:
+    Make a linkedlist/vector and store each variable in it. When trying to access variable that does not exist, 
+    print an error.
+
+Print statements:
+    If it is a literal string, cout it. If it is a variable grab value from linkedlist/vector then cout it.

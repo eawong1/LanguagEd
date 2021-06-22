@@ -1,0 +1,9 @@
+print "hello_world"
+for ( i = 0 , i <= 6 , 2 )
+{
+print i
+}
+for 1 to 6 with i
+{
+print i
+}

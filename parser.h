@@ -10,6 +10,7 @@ class Parser
 {
     private:
         void syntax_error();
+        void varNotFound(string var);
         Lexer::Token peek();
     public:
         void program();
@@ -26,7 +27,7 @@ class Parser
         void condition();
         void body();
         void for_stmt();
-        void primary();
+        string primary();
         void op();
         void relop();
 };

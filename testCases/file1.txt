@@ -1,0 +1,5 @@
+print "hello_world"
+print "this_is_a_test"
+a = "assignment"
+print a
+print b

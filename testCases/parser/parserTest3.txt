@@ -1,0 +1,2 @@
+a = 1 + i
+a = "this_is_string"

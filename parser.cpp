@@ -1,10 +1,20 @@
 #include <iostream>
 #include <string>
-
+#include <vector>
 #include "lexer.h"
 #include "parser.h"
 
 using namespace std;
+
+
+struct Variable
+{
+    string id = "";
+    string value = "";
+};
+
+vector<Variable> variableList;
+
 
 void parserDebug(string method)
 {
@@ -14,6 +24,11 @@ void parserDebug(string method)
 void Parser::syntax_error()
 {
     cout << "SYNTAX ERROR" << endl;
+}
+
+void Parser::varNotFound(string var)
+{
+    cout << "ERROR: The variable " << var << " has not been defined yet." << endl;
 }
 
 Lexer::Token Parser::peek()
@@ -27,21 +42,21 @@ Lexer::Token Parser::peek()
 
 void Parser::program()
 {
-    parserDebug("program");
+    // parserDebug("program");
 
     program_body();
 }
 
 void Parser::program_body()
 {
-    parserDebug("program_body");
+    // parserDebug("program_body");
 
     stmt_list();
 }
 
 void Parser::stmt_list()
 {
-    parserDebug("stmt_list");
+    // parserDebug("stmt_list");
 
     stmt();
 
@@ -55,7 +70,7 @@ void Parser::stmt_list()
 
 void Parser::stmt()
 {
-    parserDebug("stmt");
+    // parserDebug("stmt");
 
     Lexer::Token t = peek();
     if (t.tokenType == PRINT)
@@ -78,7 +93,7 @@ void Parser::stmt()
 
 void Parser::print_stmt()
 {
-    parserDebug("print_stmt");
+    // parserDebug("print_stmt");
 
     Lexer lexer;
     Lexer::Token t = lexer.getToken();
@@ -95,14 +110,35 @@ void Parser::print_stmt()
 
 void Parser::assign_stmt()
 {
-    parserDebug("assign_stmt");
+    // parserDebug("assign_stmt");
 
     Lexer lexer;
     Lexer::Token t = lexer.getToken();
-
+    string id = "";
     if (t.tokenType != ID)
     {
         syntax_error();
+    }
+    else
+    {
+        string var = t.lexeme;
+        id = var;
+        bool inList = false;
+        for(Variable variable : variableList)
+        {
+            if(var == variable.id)
+            {
+                inList = true;
+            }
+        }
+
+        //if variable that is trying to be accessed is not found output error
+        if(!inList)
+        {
+            Variable tempVar;
+            tempVar.id = var;
+            variableList.push_back(tempVar);
+        }
     }
 
     t = lexer.getToken();
@@ -117,11 +153,24 @@ void Parser::assign_stmt()
         lexer.ungetToken(t);
         arithmetic();
     }
+    else if(t.tokenType == STRING)
+    {
+        for(int i = 0; i < variableList.size(); i++)
+        {
+            string variable = variableList[i].id;
+
+            if(variable == id)
+            {
+                variableList[i].value = t.lexeme;
+            }
+        }
+    }
+    
 }
 
 void Parser::if_stmt()
 {
-    parserDebug("if_stmt");
+    // parserDebug("if_stmt");
 
     Lexer lexer;
     Lexer::Token t = lexer.getToken();
@@ -143,7 +192,7 @@ void Parser::if_stmt()
 
 void Parser::else_stmt()
 {
-    parserDebug("else_stmt");
+    // parserDebug("else_stmt");
 
     Lexer lexer;
     Lexer::Token t = lexer.getToken();
@@ -158,7 +207,7 @@ void Parser::else_stmt()
 
 void Parser::for_loop()
 {
-    parserDebug("for_loop");
+    // parserDebug("for_loop");
 
     Lexer lexer;
     Lexer::Token t = lexer.getToken();
@@ -220,7 +269,7 @@ void Parser::for_loop()
 
 void Parser::print_line()
 {
-    parserDebug("print_line");
+    // parserDebug("print_line");
 
     Lexer lexer;
     Lexer::Token t = lexer.getToken();
@@ -229,11 +278,40 @@ void Parser::print_line()
     {
         syntax_error();
     }
+    else if(t.tokenType == STRING)
+    {
+        string literal = t.lexeme.substr(1,t.lexeme.size() - 2); //gets rid of quotes
+        cout << literal << endl;
+    }
+    else if(t.tokenType == ID)
+    {
+        string value = "";
+        bool found = false;
+        for(Variable var : variableList)
+        {
+            if(var.id == t.lexeme)
+            {
+                value = var.value;
+                found = true;
+            }
+        }
+        
+        if(!found)
+        {
+            varNotFound(t.lexeme);
+        }
+        else
+        {
+            string literal = value.substr(1, value.size() - 2); //gets rid of quotes
+            cout << literal << endl;
+        }
+    }
+
 }
 
 void Parser::arithmetic()
 {
-    parserDebug("arithmetic");
+    // parserDebug("arithmetic");
 
     Lexer lexer;
     primary();
@@ -248,7 +326,7 @@ void Parser::arithmetic()
 
 void Parser::condition()
 {
-    parserDebug("condition");
+    // parserDebug("condition");
 
     Lexer lexer;
     Lexer::Token t = lexer.getToken();
@@ -263,7 +341,7 @@ void Parser::condition()
 
 void Parser::body()
 {
-    parserDebug("body");
+    // parserDebug("body");
 
     Lexer lexer;
     Lexer::Token t = lexer.getToken();
@@ -283,7 +361,7 @@ void Parser::body()
 
 void Parser::for_stmt()
 {
-    parserDebug("for_stmt");
+    // parserDebug("for_stmt");
 
     assign_stmt();
 
@@ -310,9 +388,9 @@ void Parser::for_stmt()
     }
 }
 
-void Parser::primary()
+string Parser::primary()
 {
-    parserDebug("primary");
+    // parserDebug("primary");
 
     Lexer lexer;
     Lexer::Token t = lexer.getToken();
@@ -320,11 +398,27 @@ void Parser::primary()
     {
         syntax_error();
     }
+    else if(t.tokenType == NUM)
+    {
+        return t.lexeme;
+    }
+    else if(t.tokenType == ID)
+    {
+        string varValue = "";
+        for(Variable variable : variableList)
+        {
+            if(variable.id == t.lexeme)
+            {
+                varValue = variable.value;
+            }
+        }
+        return varValue;
+    }
 }
 
 void Parser::op()
 {
-    parserDebug("op");
+    // parserDebug("op");
 
     Lexer lexer;
     Lexer::Token t = lexer.getToken();
@@ -336,7 +430,7 @@ void Parser::op()
 
 void Parser::relop()
 {
-    parserDebug("relop");
+    // parserDebug("relop");
 
     Lexer lexer;
     Lexer::Token t = lexer.getToken();

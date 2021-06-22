@@ -49,7 +49,7 @@ The second type has the "for" keyword followed by a range in which you would lik
 That range will be followed by the "with" keyword and the variable that will be the increment variable.
 
 Example:
-for(i = 0, i <= 6, 2 )
+for( i = 0, i <= 6, 2 )
 {
 	print i 
 }

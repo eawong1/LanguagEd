@@ -5,15 +5,8 @@ stmt
 assign_stmt
 arithmetic
 primary
-stmt_list
-stmt
-if_stmt
-condition
-relop
+op
 primary
-body
 stmt_list
 stmt
 assign_stmt
-arithmetic
-primary
