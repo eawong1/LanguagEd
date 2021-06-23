@@ -23,7 +23,7 @@ class Parser
         void else_stmt();
         void for_loop();
         void print_line();
-        void arithmetic();
+        string arithmetic();
         void condition();
         void body();
         void for_stmt();

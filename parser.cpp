@@ -151,7 +151,17 @@ void Parser::assign_stmt()
     if (t.tokenType != STRING)
     {
         lexer.ungetToken(t);
-        arithmetic();
+         string num = arithmetic();
+
+         for(int i = 0; i < variableList.size(); i++)
+         {
+             string variable = variableList[i].id;
+
+             if(variable == id)
+             {
+                 variableList[i].value = t.lexeme;
+             }
+         }
     }
     else if(t.tokenType == STRING)
     {
@@ -300,21 +310,25 @@ void Parser::print_line()
         {
             varNotFound(t.lexeme);
         }
-        else
+        else if(value[0] == '"')
         {
             string literal = value.substr(1, value.size() - 2); //gets rid of quotes
             cout << literal << endl;
+        }
+        else
+        {
+            cout << value << endl;
         }
     }
 
 }
 
-void Parser::arithmetic()
+string Parser::arithmetic()
 {
     // parserDebug("arithmetic");
 
     Lexer lexer;
-    primary();
+    string num = primary();
 
     Lexer::Token t = peek();
     if (t.tokenType == PLUS || t.tokenType == MINUS || t.tokenType == MULT || t.tokenType == DIV)
@@ -322,6 +336,8 @@ void Parser::arithmetic()
         op();
         primary();
     }
+
+    return num; 
 }
 
 void Parser::condition()
