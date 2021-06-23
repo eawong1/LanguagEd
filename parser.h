@@ -28,7 +28,7 @@ class Parser
         void body();
         void for_stmt();
         string primary();
-        void op();
+        Lexer::Token op();
         void relop();
 };
 

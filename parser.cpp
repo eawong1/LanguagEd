@@ -159,7 +159,7 @@ void Parser::assign_stmt()
 
              if(variable == id)
              {
-                 variableList[i].value = t.lexeme;
+                 variableList[i].value = num;
              }
          }
     }
@@ -323,6 +323,7 @@ void Parser::print_line()
 
 }
 
+//TODO: complete the math portion of the language
 string Parser::arithmetic()
 {
     // parserDebug("arithmetic");
@@ -331,10 +332,41 @@ string Parser::arithmetic()
     string num = primary();
 
     Lexer::Token t = peek();
+    Lexer::Token optr;
+
+    bool num2Exist = false;
+    string num2 = "";
     if (t.tokenType == PLUS || t.tokenType == MINUS || t.tokenType == MULT || t.tokenType == DIV)
     {
-        op();
-        primary();
+        optr = op();
+        num2 = primary();
+        num2Exist = true;
+    }
+    
+    int ans = 0;
+    if(num2Exist)
+    {
+        int op1 = stoi(num);
+        int op2 = stoi(num2);
+
+        if(optr.tokenType == PLUS)
+        {
+            ans = op1 + op2;
+        }
+        else if(optr.tokenType == MINUS)
+        {
+            ans = op1 - op2;
+        }
+        else if(optr.tokenType == MULT)
+        {
+            ans = op1 * op2;
+        }
+        else if(optr.tokenType == DIV)
+        {
+            ans = op1/op2;
+        }
+
+        num = to_string(ans);
     }
 
     return num; 
@@ -432,7 +464,7 @@ string Parser::primary()
     }
 }
 
-void Parser::op()
+Lexer::Token Parser::op()
 {
     // parserDebug("op");
 
@@ -442,6 +474,7 @@ void Parser::op()
     {
         syntax_error();
     }
+    return t;
 }
 
 void Parser::relop()

@@ -2,6 +2,8 @@ print "hello_world"
 print "this_is_a_test"
 a = "assignment"
 c = 5
+d = 4 + 6
 print a
 print b
 print c
+print d
