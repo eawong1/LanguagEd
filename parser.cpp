@@ -7,6 +7,8 @@
 using namespace std;
 
 
+//TODO: Reset result after it is set to false
+
 struct Variable
 {
     string id = "";
@@ -14,7 +16,6 @@ struct Variable
 };
 
 vector<Variable> variableList;
-
 
 void parserDebug(string method)
 {
@@ -119,7 +120,7 @@ void Parser::assign_stmt()
     {
         syntax_error();
     }
-    else
+    else if(t.tokenType == ID && result)
     {
         string var = t.lexeme;
         id = var;
@@ -151,19 +152,22 @@ void Parser::assign_stmt()
     if (t.tokenType != STRING)
     {
         lexer.ungetToken(t);
-         string num = arithmetic();
+        string num = arithmetic();
 
-         for(int i = 0; i < variableList.size(); i++)
-         {
-             string variable = variableList[i].id;
+        if(result)
+        {
+            for (int i = 0; i < variableList.size(); i++)
+            {
+                string variable = variableList[i].id;
 
-             if(variable == id)
-             {
-                 variableList[i].value = num;
-             }
-         }
+                if (variable == id)
+                {
+                    variableList[i].value = num;
+                }
+            }
+        }
     }
-    else if(t.tokenType == STRING)
+    else if(t.tokenType == STRING && result)
     {
         for(int i = 0; i < variableList.size(); i++)
         {
@@ -190,14 +194,19 @@ void Parser::if_stmt()
         syntax_error();
     }
 
-    condition();
+    result = condition();
+    // cout << "result: " << result << endl;
+
     body();
 
     t = peek();
+    // cout << "token type: " << t.tokenType << endl; 
+    
     if (t.tokenType == ELSE)
     {
         else_stmt();
     }
+    result = true;
 }
 
 void Parser::else_stmt()
@@ -212,6 +221,14 @@ void Parser::else_stmt()
         syntax_error();
     }
 
+    if(result)
+    {
+        result = false;
+    }
+    else if(!result)
+    {
+        result = true;
+    }
     body();
 }
 
@@ -288,12 +305,12 @@ void Parser::print_line()
     {
         syntax_error();
     }
-    else if(t.tokenType == STRING)
+    else if(t.tokenType == STRING && result)
     {
         string literal = t.lexeme.substr(1,t.lexeme.size() - 2); //gets rid of quotes
         cout << literal << endl;
     }
-    else if(t.tokenType == ID)
+    else if(t.tokenType == ID && result)
     {
         string value = "";
         bool found = false;
@@ -323,7 +340,6 @@ void Parser::print_line()
 
 }
 
-//TODO: complete the math portion of the language
 string Parser::arithmetic()
 {
     // parserDebug("arithmetic");
@@ -372,19 +388,63 @@ string Parser::arithmetic()
     return num; 
 }
 
-void Parser::condition()
+bool Parser::condition()
 {
     // parserDebug("condition");
-
     Lexer lexer;
     Lexer::Token t = lexer.getToken();
+    int num = 0;
+    int num2 = 0;
+
     if (t.tokenType != ID)
     {
         syntax_error();
     }
+    else 
+    {
+        string id = t.lexeme;
+        for(Variable var : variableList)
+        {
+            if(id == var.id)
+            {
+                num = stoi(var.value);
+                break;
+            }
+        }
+    }
 
-    relop();
-    primary();
+    t = relop();
+    num2 = stoi(primary());
+
+    if(t.tokenType == GREATER)
+    {
+        return (num > num2);
+    }
+    else if(t.tokenType == LESS)
+    {
+        return (num < num2);
+    }
+    else if(t.tokenType == GREATER_EQUAL)
+    {
+        return (num >= num2);
+    }
+    else if(t.tokenType == LESS_EQUAL)
+    {
+        return (num <= num2);
+    }
+    else if(t.tokenType == EQUALTO)
+    {
+        return (num == num2);
+    }
+    else if(t.tokenType == NOT_EQUAL)
+    {
+        return (num != num2);
+    }
+
+    return false; 
+
+
+
 }
 
 void Parser::body()
@@ -398,6 +458,7 @@ void Parser::body()
         syntax_error();
     }
 
+    //! This could be causing an error
     stmt_list();
 
     t = lexer.getToken();
@@ -477,14 +538,16 @@ Lexer::Token Parser::op()
     return t;
 }
 
-void Parser::relop()
+Lexer::Token Parser::relop()
 {
     // parserDebug("relop");
 
     Lexer lexer;
     Lexer::Token t = lexer.getToken();
-    if (t.tokenType == GREATER && t.tokenType == LESS && t.tokenType == GREATER_EQUAL && t.tokenType == LESS_EQUAL && t.tokenType == EQUALTO && t.tokenType == NOT_EQUAL)
+    if (t.tokenType != GREATER && t.tokenType != LESS && t.tokenType != GREATER_EQUAL && t.tokenType != LESS_EQUAL && t.tokenType != EQUALTO && t.tokenType != NOT_EQUAL)
     {
         syntax_error();
     }
+
+    return t; 
 }

@@ -1,6 +1,2 @@
+it_gets_here"
 hello_world
-this_is_a_test
-assignment
-ERROR: The variable b has not been defined yet.
-5
-10

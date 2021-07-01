@@ -9,6 +9,8 @@
 class Parser
 {
     private:
+        bool result = true;
+
         void syntax_error();
         void varNotFound(string var);
         Lexer::Token peek();
@@ -24,12 +26,12 @@ class Parser
         void for_loop();
         void print_line();
         string arithmetic();
-        void condition();
+        bool condition();
         void body();
         void for_stmt();
         string primary();
         Lexer::Token op();
-        void relop();
+        Lexer::Token relop();
 };
 
 #endif PARSER
