@@ -10,6 +10,9 @@ class Parser
 {
     private:
         bool result = true;
+        bool forLoop = false;
+        int startingNum = 0;
+        int endingNum = 0;
 
         void syntax_error();
         void varNotFound(string var);
@@ -20,7 +23,7 @@ class Parser
         void stmt_list();
         void stmt();
         void print_stmt();
-        void assign_stmt();
+        string assign_stmt();
         void if_stmt();
         void else_stmt();
         void for_loop();

@@ -7,13 +7,18 @@
 using namespace std;
 
 
-//TODO: Reset result after it is set to false
+//TODO: Redo if statements
 
 struct Variable
 {
     string id = "";
     string value = "";
 };
+
+// struct forInstructList
+// {
+
+// };
 
 vector<Variable> variableList;
 
@@ -109,7 +114,7 @@ void Parser::print_stmt()
     }
 }
 
-void Parser::assign_stmt()
+string Parser::assign_stmt()
 {
     // parserDebug("assign_stmt");
 
@@ -180,6 +185,7 @@ void Parser::assign_stmt()
         }
     }
     
+    return id;
 }
 
 void Parser::if_stmt()
@@ -290,6 +296,7 @@ void Parser::for_loop()
             syntax_error();
         }
 
+        forLoop = true; 
         body();
     }
 }
@@ -458,7 +465,6 @@ void Parser::body()
         syntax_error();
     }
 
-    //! This could be causing an error
     stmt_list();
 
     t = lexer.getToken();
@@ -468,11 +474,32 @@ void Parser::body()
     }
 }
 
+//TODO:Finish for loop. So far all I did was get the result of the condition
 void Parser::for_stmt()
 {
     // parserDebug("for_stmt");
 
-    assign_stmt();
+    string id = assign_stmt();
+    int value = 0;
+
+    for(Variable var : variableList)
+    {
+        if(var.id == id)
+        {
+            //if the user doesn't provide an int as the increment value it will cause an exception that spits out an error
+            try
+            {
+                value = stoi(var.value);
+            }
+            catch(const std::exception& e)
+            {
+                cout << "Error for-loop requires an int as the increment value" << endl;
+            }
+            
+            break;
+        }
+    }
+
 
     Lexer lexer;
     Lexer::Token t = lexer.getToken();
@@ -482,7 +509,7 @@ void Parser::for_stmt()
         syntax_error();
     }
 
-    condition();
+    result = condition();
 
     t = lexer.getToken();
     if (t.tokenType != COMMA)
