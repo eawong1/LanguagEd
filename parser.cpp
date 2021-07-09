@@ -6,10 +6,12 @@
 
 using namespace std;
 
-
 //TODO: Redo everything :(
 
-vector<struct InstructionNode*> instructions;
+//defining vector 
+vector<Variable> Parser::variableList;
+
+vector<struct InstructionNode *> Parser::instructions;
 
 void parserDebug(string method)
 {
@@ -45,18 +47,16 @@ void Parser::program()
 void Parser::program_body()
 {
     // parserDebug("program_body");
-
     stmt_list();
 }
 
 void Parser::stmt_list()
 {
     // parserDebug("stmt_list");
-
     stmt();
 
     Lexer::Token t = peek();
-    cout << ""; //flush out null terminator string from stack 
+    cout << ""; //flush out null terminator string from stack
     if (t.tokenType == PRINT || t.tokenType == ID || t.tokenType == IF || t.tokenType == FOR)
     {
         stmt_list();
@@ -110,29 +110,36 @@ string Parser::assign_stmt()
     Lexer lexer;
     Lexer::Token t = lexer.getToken();
     string id = "";
+    struct InstructionNode assignment;
+
     if (t.tokenType != ID)
     {
         syntax_error();
     }
-    else if(t.tokenType == ID && result)
+    else if (t.tokenType == ID && result)
     {
+        int varIndex = 0;
         string var = t.lexeme;
         id = var;
         bool inList = false;
-        for(Variable variable : variableList)
+        for (Variable variable : variableList)
         {
-            if(var == variable.id)
+            if (var == variable.id)
             {
                 inList = true;
+                break;
             }
+            varIndex++;
         }
 
         //if variable that is trying to be accessed is not found output error
-        if(!inList)
+        if (!inList)
         {
             Variable tempVar;
             tempVar.id = var;
             variableList.push_back(tempVar);
+
+            assignment.assign.lhsIndex = varIndex;
         }
     }
 
@@ -147,33 +154,32 @@ string Parser::assign_stmt()
     {
         lexer.ungetToken(t);
         string num = arithmetic();
+        
 
-        if(result)
+        for (int i = 0; i < variableList.size(); i++)
         {
-            for (int i = 0; i < variableList.size(); i++)
+            string variable = variableList[i].id;
+            
+            if (variable == id)
             {
-                string variable = variableList[i].id;
-
-                if (variable == id)
-                {
-                    variableList[i].value = num;
-                }
+                variableList[i].value = num;
+                
             }
         }
     }
-    else if(t.tokenType == STRING && result)
+    else if (t.tokenType == STRING && result)
     {
-        for(int i = 0; i < variableList.size(); i++)
+        for (int i = 0; i < variableList.size(); i++)
         {
             string variable = variableList[i].id;
 
-            if(variable == id)
+            if (variable == id)
             {
                 variableList[i].value = t.lexeme;
             }
         }
     }
-    
+
     return id;
 }
 
@@ -195,8 +201,8 @@ void Parser::if_stmt()
     body();
 
     t = peek();
-    // cout << "token type: " << t.tokenType << endl; 
-    
+    // cout << "token type: " << t.tokenType << endl;
+
     if (t.tokenType == ELSE)
     {
         else_stmt();
@@ -216,11 +222,11 @@ void Parser::else_stmt()
         syntax_error();
     }
 
-    if(result)
+    if (result)
     {
         result = false;
     }
-    else if(!result)
+    else if (!result)
     {
         result = true;
     }
@@ -285,7 +291,7 @@ void Parser::for_loop()
             syntax_error();
         }
 
-        forLoop = true; 
+        forLoop = true;
         body();
     }
 }
@@ -296,46 +302,56 @@ void Parser::print_line()
 
     Lexer lexer;
     Lexer::Token t = lexer.getToken();
+    InstructionNode* instruction = new InstructionNode;
 
     if (t.tokenType != ID && t.tokenType != STRING)
     {
         syntax_error();
     }
-    else if(t.tokenType == STRING && result)
+    else if (t.tokenType == STRING)
     {
-        string literal = t.lexeme.substr(1,t.lexeme.size() - 2); //gets rid of quotes
+        string literal = t.lexeme.substr(1, t.lexeme.size() - 2); //gets rid of quotes
         Variable temp;
-        temp.id = "literal";
+        temp.id = "";
         temp.value = literal;
+        variableList.push_back(temp);
+
+        int index = variableList.size() - 1;
+        instruction->type = OUTPUT;
+        instruction->output.index = index; 
     }
-    else if(t.tokenType == ID && result)
+    else if (t.tokenType == ID)
     {
         string value = "";
         bool found = false;
-        for(Variable var : variableList)
+        int index = 0;
+        for (Variable var : variableList)
         {
-            if(var.id == t.lexeme)
+            if (var.id == t.lexeme)
             {
                 value = var.value;
                 found = true;
+                break;
             }
+            index++;
         }
-        
-        if(!found)
+        if (!found)
         {
             varNotFound(t.lexeme);
         }
-        else if(value[0] == '"')
-        {
-            string literal = value.substr(1, value.size() - 2); //gets rid of quotes
-            cout << literal << endl;
-        }
-        else
-        {
-            cout << value << endl;
-        }
+        // else if (value[0] == '"')
+        // {
+        //     string literal = value.substr(1, value.size() - 2); //gets rid of quotes
+        //     cout << literal << endl;
+        // }
+        // else
+        // {
+        //     cout << value << endl;
+        // }
+        instruction->type = OUTPUT;
+        instruction->output.index = index;
     }
-
+    instructions.push_back(instruction);
 }
 
 string Parser::arithmetic()
@@ -356,34 +372,34 @@ string Parser::arithmetic()
         num2 = primary();
         num2Exist = true;
     }
-    
+
     int ans = 0;
-    if(num2Exist)
+    if (num2Exist)
     {
         int op1 = stoi(num);
         int op2 = stoi(num2);
 
-        if(optr.tokenType == PLUS)
+        if (optr.tokenType == PLUS)
         {
             ans = op1 + op2;
         }
-        else if(optr.tokenType == MINUS)
+        else if (optr.tokenType == MINUS)
         {
             ans = op1 - op2;
         }
-        else if(optr.tokenType == MULT)
+        else if (optr.tokenType == MULT)
         {
             ans = op1 * op2;
         }
-        else if(optr.tokenType == DIV)
+        else if (optr.tokenType == DIV)
         {
-            ans = op1/op2;
+            ans = op1 / op2;
         }
 
         num = to_string(ans);
     }
 
-    return num; 
+    return num;
 }
 
 bool Parser::condition()
@@ -398,12 +414,12 @@ bool Parser::condition()
     {
         syntax_error();
     }
-    else 
+    else
     {
         string id = t.lexeme;
-        for(Variable var : variableList)
+        for (Variable var : variableList)
         {
-            if(id == var.id)
+            if (id == var.id)
             {
                 num = stoi(var.value);
                 break;
@@ -414,35 +430,32 @@ bool Parser::condition()
     t = relop();
     num2 = stoi(primary());
 
-    if(t.tokenType == GREATER)
+    if (t.tokenType == GREATER)
     {
         return (num > num2);
     }
-    else if(t.tokenType == LESS)
+    else if (t.tokenType == LESS)
     {
         return (num < num2);
     }
-    else if(t.tokenType == GREATER_EQUAL)
+    else if (t.tokenType == GREATER_EQUAL)
     {
         return (num >= num2);
     }
-    else if(t.tokenType == LESS_EQUAL)
+    else if (t.tokenType == LESS_EQUAL)
     {
         return (num <= num2);
     }
-    else if(t.tokenType == EQUALTO)
+    else if (t.tokenType == EQUALTO)
     {
         return (num == num2);
     }
-    else if(t.tokenType == NOT_EQUAL)
+    else if (t.tokenType == NOT_EQUAL)
     {
         return (num != num2);
     }
 
-    return false; 
-
-
-
+    return false;
 }
 
 void Parser::body()
@@ -473,24 +486,23 @@ void Parser::for_stmt()
     string id = assign_stmt();
     int value = 0;
 
-    for(Variable var : variableList)
+    for (Variable var : variableList)
     {
-        if(var.id == id)
+        if (var.id == id)
         {
             //if the user doesn't provide an int as the increment value it will cause an exception that spits out an error
             try
             {
                 value = stoi(var.value);
             }
-            catch(const std::exception& e)
+            catch (const std::exception &e)
             {
                 cout << "Error for-loop requires an int as the increment value" << endl;
             }
-            
+
             break;
         }
     }
-
 
     Lexer lexer;
     Lexer::Token t = lexer.getToken();
@@ -525,16 +537,16 @@ string Parser::primary()
     {
         syntax_error();
     }
-    else if(t.tokenType == NUM)
+    else if (t.tokenType == NUM)
     {
         return t.lexeme;
     }
-    else if(t.tokenType == ID)
+    else if (t.tokenType == ID)
     {
         string varValue = "";
-        for(Variable variable : variableList)
+        for (Variable variable : variableList)
         {
-            if(variable.id == t.lexeme)
+            if (variable.id == t.lexeme)
             {
                 varValue = variable.value;
             }
@@ -567,5 +579,5 @@ Lexer::Token Parser::relop()
         syntax_error();
     }
 
-    return t; 
+    return t;
 }

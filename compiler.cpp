@@ -6,17 +6,15 @@
 
 using namespace std;
 
-void execute(struct InstructionNode* program)
+void execute()
 {
-    struct InstructionNode* temp = program;
-
-    while(temp != NULL)
+    for(InstructionNode* temp : Parser::instructions)
     {
         if(temp->type == ASSIGN)
         {
             
         }
-        else if(temp->type == PRINT)
+        else if(temp->type == OUTPUT)
         {
             Variable var = Parser::variableList[temp->output.index];
             cout << var.value << endl;
@@ -44,4 +42,6 @@ int main(int argc, char **argv)
 
     Parser parser;
     parser.program();
+
+    execute();
 }

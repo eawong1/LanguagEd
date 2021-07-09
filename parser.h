@@ -11,7 +11,7 @@ enum InstructionType
 {
     NOOP = 1000,
     ASSIGN,
-    PRINT,
+    OUTPUT,
     CJMP,
     JMP
 };
@@ -63,6 +63,7 @@ class Parser
         Lexer::Token peek();
     public:
         static vector<Variable> variableList;
+        static vector<struct InstructionNode *> instructions;
         void program();
         void program_body();
         void stmt_list();
