@@ -7,20 +7,9 @@
 using namespace std;
 
 
-//TODO: Redo if statements
+//TODO: Redo everything :(
 
-struct Variable
-{
-    string id = "";
-    string value = "";
-};
-
-// struct forInstructList
-// {
-
-// };
-
-vector<Variable> variableList;
+vector<struct InstructionNode*> instructions;
 
 void parserDebug(string method)
 {
@@ -315,7 +304,9 @@ void Parser::print_line()
     else if(t.tokenType == STRING && result)
     {
         string literal = t.lexeme.substr(1,t.lexeme.size() - 2); //gets rid of quotes
-        cout << literal << endl;
+        Variable temp;
+        temp.id = "literal";
+        temp.value = literal;
     }
     else if(t.tokenType == ID && result)
     {

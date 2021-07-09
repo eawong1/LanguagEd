@@ -5,6 +5,33 @@
 #include "parser.h"
 
 using namespace std;
+
+void execute(struct InstructionNode* program)
+{
+    struct InstructionNode* temp = program;
+
+    while(temp != NULL)
+    {
+        if(temp->type == ASSIGN)
+        {
+            
+        }
+        else if(temp->type == PRINT)
+        {
+            Variable var = Parser::variableList[temp->output.index];
+            cout << var.value << endl;
+        }
+        else if(temp->type == CJMP)
+        {
+
+        }
+        else if(temp->type == JMP)
+        {
+            
+        }
+    }
+}
+
 int main(int argc, char **argv)
 {
     string file = argv[1];

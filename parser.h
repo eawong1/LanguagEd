@@ -3,8 +3,52 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include "lexer.h"
+
+enum InstructionType
+{
+    NOOP = 1000,
+    ASSIGN,
+    PRINT,
+    CJMP,
+    JMP
+};
+
+struct Variable
+{
+    string id = "";
+    string value = "";
+};
+
+struct InstructionNode
+{
+    InstructionType type;
+    struct 
+    {
+        int lhsIndex;
+        int rhsIndex;
+        string op;
+
+    } assign;
+    
+    struct
+    {
+        int index; 
+    } output; 
+
+    struct 
+    {
+        bool result;
+        struct InstructionNode* target; 
+    } cjmp;
+    struct 
+    {
+        struct InstructionNode* target;
+    } jmp;
+    
+};
 
 class Parser
 {
@@ -18,6 +62,7 @@ class Parser
         void varNotFound(string var);
         Lexer::Token peek();
     public:
+        static vector<Variable> variableList;
         void program();
         void program_body();
         void stmt_list();
