@@ -53,12 +53,14 @@ void Parser::program_body()
 void Parser::stmt_list()
 {
     // parserDebug("stmt_list");
+    // cout << "it gets here" << endl;
     stmt();
 
     Lexer::Token t = peek();
-    cout << ""; //flush out null terminator string from stack
+
     if (t.tokenType == PRINT || t.tokenType == ID || t.tokenType == IF || t.tokenType == FOR)
     {
+        cout << flush; //need to flush the stream to avoid buffer overflow 
         stmt_list();
     }
 }
@@ -339,19 +341,20 @@ void Parser::print_line()
         {
             varNotFound(t.lexeme);
         }
-        // else if (value[0] == '"')
-        // {
-        //     string literal = value.substr(1, value.size() - 2); //gets rid of quotes
-        //     cout << literal << endl;
-        // }
-        // else
-        // {
-        //     cout << value << endl;
-        // }
+        else if (value[0] == '"')
+        {
+            string literal = value.substr(1, value.size() - 2); //gets rid of quotes
+            cout << literal << endl;
+        }
+        else
+        {
+            cout << value << endl;
+        }
         instruction->type = OUTPUT;
         instruction->output.index = index;
     }
     instructions.push_back(instruction);
+
 }
 
 string Parser::arithmetic()

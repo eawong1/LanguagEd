@@ -10,9 +10,11 @@
 using namespace std;
 
 vector<string> inputLine;
-stack<string> tokens;
+// stack<string> tokens;
+vector<string> tokens;
 string scriptFile;
 ifstream file;
+bool lineResult = true;
 
 
 bool isNullTerminator(char check)
@@ -60,14 +62,14 @@ bool Lexer::readLine()
     string line;
     vector<string> splitted;
     //return 'file' and file evalutes to true when previous read was successful 
-    if(file.is_open() && getline(file, line))
+    if(file.is_open() && getline(file, line) && lineResult)
     {
         splitted = split(line, " ");
         //stack is LIFO so have to insert in reverse order
         reverse(splitted.begin(),splitted.end());
         for(string token : splitted)
         {
-            tokens.push(token);
+            tokens.push_back(token);
         }
         return true;
     }
@@ -88,21 +90,27 @@ void Lexer::setFile(string file)
 Lexer::Token Lexer::getToken()
 {
     Lexer::Token t;
-    bool lineResult = true;
+    // bool lineResult = true;
 
-    stack<string> temp = tokens;
-
+    // cout << "size: " << tokens.size() << endl;
+    // if(tokens.size() > 0)
+    // cout << "last Element: " << tokens.back() << endl;
     //if tokens stack is empty read the next line and repopulate it 
     if(tokens.empty())
     {
         lineResult = readLine();
     }
-
-
+    // if(!lineResult)
+    // {
+    //     tokens.clear();
+    // }
+    // cout << "LineResult: " << lineResult << endl;
+    
     //if there are still more lines
     if(lineResult /*&& !isNullTerminator(tokens.top()[0])*/)
     {
-        t.lexeme = tokens.top();
+        // cout << "it gets here" << endl;2000
+        t.lexeme = tokens.back();
         // cout << "Top: " << t.lexeme << endl;
 
         if(t.lexeme == "print")
@@ -210,7 +218,7 @@ Lexer::Token Lexer::getToken()
         }
 
         //pop token from stack 
-        tokens.pop();
+        tokens.pop_back();
 
     }
 
@@ -220,6 +228,6 @@ Lexer::Token Lexer::getToken()
 
 Lexer::Token Lexer::ungetToken(Lexer::Token token)
 {
-    tokens.push(token.lexeme);
+    tokens.push_back(token.lexeme);
     return token;
 }

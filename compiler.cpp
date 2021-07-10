@@ -28,6 +28,13 @@ void execute()
             
         }
     }
+
+    //clear vector from memory to avoid mem leak
+    for(int i = 0; i < Parser::instructions.size(); i++)
+    {
+        delete Parser::instructions[i];
+    }
+    Parser::instructions.clear(); //to clear all the nulls from the vector
 }
 
 int main(int argc, char **argv)
