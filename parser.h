@@ -9,7 +9,6 @@
 
 enum InstructionType
 {
-    NOOP = 1000,
     ASSIGN,
     OUTPUT,
     CJMP,
@@ -22,14 +21,22 @@ struct Variable
     string value = "";
 };
 
+struct AssignStmtNode
+{
+    string num1;
+    string num2;
+    Lexer::Token op;
+};
+
 struct InstructionNode
 {
     InstructionType type;
     struct 
     {
         int lhsIndex;
-        int rhsIndex;
-        string op;
+        string rhs1;
+        string rhs2;
+        Lexer::Token op;
 
     } assign;
     
@@ -74,7 +81,7 @@ class Parser
         void else_stmt();
         void for_loop();
         void print_line();
-        string arithmetic();
+        AssignStmtNode arithmetic();
         bool condition();
         void body();
         void for_stmt();

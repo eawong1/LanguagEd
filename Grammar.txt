@@ -45,6 +45,7 @@ GREATER_EQUAL = 22	check
 LESS_EQUAL = 23 	check
 EQUALTO = 24 		check
 NOT_EQUAL = 25 		check
+NOOP = 26   
 
 
 
