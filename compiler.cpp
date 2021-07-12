@@ -8,8 +8,9 @@ using namespace std;
 
 void execute()
 {
-    for (InstructionNode *temp : Parser::instructions)
+    for (int i = 0; i < Parser::instructions.size(); i++)
     {
+        InstructionNode *temp = Parser::instructions[i];
         if (temp->type == ASSIGN)
         {
             Variable *var = &Parser::variableList[temp->assign.lhsIndex];

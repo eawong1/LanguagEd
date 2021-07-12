@@ -51,29 +51,33 @@ void Parser::program_body()
     stmt_list();
 }
 
-void Parser::stmt_list()
+InstructionNode* Parser::stmt_list()
 {
     // parserDebug("stmt_list");
     // cout << "it gets here" << endl;
-    stmt();
+    InstructionNode* stmtList = NULL;
+    stmtList = stmt();
 
     Lexer::Token t = peek();
 
     if (t.tokenType == PRINT || t.tokenType == ID || t.tokenType == IF || t.tokenType == FOR)
     {
         cout << flush; //need to flush the stream to avoid buffer overflow 
-        stmt_list();
+        stmtList->next = stmt_list();
     }
+
+    return stmtList;
 }
 
-void Parser::stmt()
+InstructionNode* Parser::stmt()
 {
     // parserDebug("stmt");
+    InstructionNode* stmtList = NULL; 
 
     Lexer::Token t = peek();
     if (t.tokenType == PRINT)
     {
-        print_stmt();
+        stmtList = print_stmt();
     }
     else if (t.tokenType == ID)
     {
@@ -87,11 +91,14 @@ void Parser::stmt()
     {
         for_loop();
     }
+
+    return stmtList;
 }
 
-void Parser::print_stmt()
+InstructionNode* Parser::print_stmt()
 {
     // parserDebug("print_stmt");
+    InstructionNode* print = NULL;
 
     Lexer lexer;
     Lexer::Token t = lexer.getToken();
@@ -102,8 +109,10 @@ void Parser::print_stmt()
     }
     else
     {
-        print_line();
+        print = print_line();
     }
+
+    return print;
 }
 
 string Parser::assign_stmt()
@@ -117,6 +126,7 @@ string Parser::assign_stmt()
     AssignStmtNode tempNode;
 
     // tempNode.op.tokenType = NOOP;
+    assignment->next = NULL;
     assignment->type = ASSIGN;
 
     if (t.tokenType != ID)
@@ -213,6 +223,7 @@ void Parser::if_stmt()
 {
     // parserDebug("if_stmt");
 
+    InstructionNode* bodyList = NULL;
     Lexer lexer;
     Lexer::Token t = lexer.getToken();
 
@@ -224,7 +235,7 @@ void Parser::if_stmt()
     result = condition();
     // cout << "result: " << result << endl;
 
-    body();
+    bodyList = body();
 
     t = peek();
     // cout << "token type: " << t.tokenType << endl;
@@ -234,6 +245,8 @@ void Parser::if_stmt()
         else_stmt();
     }
     result = true;
+
+    
 }
 
 void Parser::else_stmt()
@@ -322,13 +335,14 @@ void Parser::for_loop()
     }
 }
 
-void Parser::print_line()
+InstructionNode* Parser::print_line()
 {
     // parserDebug("print_line");
 
     Lexer lexer;
     Lexer::Token t = lexer.getToken();
     InstructionNode* instruction = new InstructionNode;
+    instruction->next = NULL;
 
     if (t.tokenType != ID && t.tokenType != STRING)
     {
@@ -379,6 +393,7 @@ void Parser::print_line()
     }
     instructions.push_back(instruction);
 
+    return instruction;
 }
 
 //TODO: no setting num1 and num2 properly fix that 
@@ -492,9 +507,10 @@ bool Parser::condition()
     return false;
 }
 
-void Parser::body()
+InstructionNode* Parser::body()
 {
     // parserDebug("body");
+    InstructionNode* stmtList = NULL;
 
     Lexer lexer;
     Lexer::Token t = lexer.getToken();
@@ -503,13 +519,15 @@ void Parser::body()
         syntax_error();
     }
 
-    stmt_list();
+    stmtList = stmt_list();
 
     t = lexer.getToken();
     if (t.tokenType != CCURLY)
     {
         syntax_error();
     }
+
+    return stmtList;
 }
 
 //TODO:Finish for loop. So far all I did was get the result of the condition

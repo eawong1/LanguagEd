@@ -56,6 +56,8 @@ struct InstructionNode
     {
         struct InstructionNode* target;
     } jmp;
+
+    InstructionNode* next; 
     
 };
 
@@ -75,17 +77,17 @@ class Parser
         static vector<struct InstructionNode *> instructions;
         void program();
         void program_body();
-        void stmt_list();
-        void stmt();
-        void print_stmt();
+        InstructionNode* stmt_list();
+        InstructionNode* stmt();
+        InstructionNode* print_stmt();
         string assign_stmt();
         void if_stmt();
         void else_stmt();
         void for_loop();
-        void print_line();
+        InstructionNode* print_line();
         AssignStmtNode arithmetic();
         bool condition();
-        void body();
+        InstructionNode* body();
         void for_stmt();
         string primary();
         Lexer::Token op();
