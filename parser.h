@@ -47,7 +47,9 @@ struct InstructionNode
 
     struct 
     {
-        bool result;
+        string num1;
+        string num2;
+        Lexer::Token op;
         struct InstructionNode* target; 
     } cjmp;
     struct 

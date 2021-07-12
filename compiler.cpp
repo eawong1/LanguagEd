@@ -51,6 +51,7 @@ void execute()
         }
         else if (temp->type == CJMP)
         {
+            
         }
         else if (temp->type == JMP)
         {
