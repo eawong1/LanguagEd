@@ -11,6 +11,7 @@ void execute()
     for (int i = 0; i < Parser::instructions.size(); i++)
     {
         InstructionNode *temp = Parser::instructions[i];
+        //TODO: create while loop and create append a NOOP as the next for everything but conditional types
         if (temp->type == ASSIGN)
         {
             Variable *var = &Parser::variableList[temp->assign.lhsIndex];
@@ -52,7 +53,40 @@ void execute()
         }
         else if (temp->type == CJMP)
         {
-            
+            int num = stoi(temp->cjmp.num1);
+            int num2 = stoi(temp->cjmp.num2);
+            Lexer::Token t = temp->cjmp.op;
+
+            bool result = false;
+            if (t.tokenType == GREATER)
+            {
+                result = (num > num2);
+            }
+            else if (t.tokenType == LESS)
+            {
+                result = (num < num2);
+            }
+            else if (t.tokenType == GREATER_EQUAL)
+            {
+                result = (num >= num2);
+            }
+            else if (t.tokenType == LESS_EQUAL)
+            {
+                result = (num <= num2);
+            }
+            else if (t.tokenType == EQUALTO)
+            {
+                result = (num == num2);
+            }
+            else if (t.tokenType == NOT_EQUAL)
+            {
+                result = (num != num2);
+            }
+
+            if(!result)
+            {
+                i = temp->cjmp.targetIndex - 1;
+            }
         }
         else if (temp->type == JMP)
         {

@@ -224,18 +224,25 @@ void Parser::if_stmt()
     // parserDebug("if_stmt");
 
     InstructionNode* bodyList = NULL;
+    InstructionNode* ifCondition = new InstructionNode;
     Lexer lexer;
+
     Lexer::Token t = lexer.getToken();
+    ifCondition->type = CJMP;
 
     if (t.tokenType != IF)
     {
         syntax_error();
     }
 
-    result = condition();
+    AssignStmtNode node = condition();
     // cout << "result: " << result << endl;
+    ifCondition->cjmp.num1 = node.num1;
+    ifCondition->cjmp.num2 = node.num2;
+    ifCondition->cjmp.op = node.op;
 
     bodyList = body();
+    
 
     t = peek();
     // cout << "token type: " << t.tokenType << endl;
@@ -244,8 +251,12 @@ void Parser::if_stmt()
     {
         else_stmt();
     }
-    result = true;
+    // result = true;
 
+    ifCondition->cjmp.targetIndex = instructions.size() + 2;
+
+    instructions.push_back(ifCondition);
+    instructions.push_back(bodyList);
     
 }
 
@@ -451,10 +462,11 @@ AssignStmtNode Parser::arithmetic()
     return tempNode;
 }
 
-bool Parser::condition()
+AssignStmtNode Parser::condition()
 {
     // parserDebug("condition");
     Lexer lexer;
+    AssignStmtNode node;
     Lexer::Token t = lexer.getToken();
     int num = 0;
     int num2 = 0;
@@ -470,41 +482,44 @@ bool Parser::condition()
         {
             if (id == var.id)
             {
-                num = stoi(var.value);
+                // num = stoi(var.value);
+                node.num1 = var.value;
                 break;
             }
         }
     }
 
     t = relop();
-    num2 = stoi(primary());
+    node.op = t;
+    // num2 = stoi(primary());
+    node.num2 = primary();
 
-    if (t.tokenType == GREATER)
-    {
-        return (num > num2);
-    }
-    else if (t.tokenType == LESS)
-    {
-        return (num < num2);
-    }
-    else if (t.tokenType == GREATER_EQUAL)
-    {
-        return (num >= num2);
-    }
-    else if (t.tokenType == LESS_EQUAL)
-    {
-        return (num <= num2);
-    }
-    else if (t.tokenType == EQUALTO)
-    {
-        return (num == num2);
-    }
-    else if (t.tokenType == NOT_EQUAL)
-    {
-        return (num != num2);
-    }
+    // if (t.tokenType == GREATER)
+    // {
+    //     return (num > num2);
+    // }
+    // else if (t.tokenType == LESS)
+    // {
+    //     return (num < num2);
+    // }
+    // else if (t.tokenType == GREATER_EQUAL)
+    // {
+    //     return (num >= num2);
+    // }
+    // else if (t.tokenType == LESS_EQUAL)
+    // {
+    //     return (num <= num2);
+    // }
+    // else if (t.tokenType == EQUALTO)
+    // {
+    //     return (num == num2);
+    // }
+    // else if (t.tokenType == NOT_EQUAL)
+    // {
+    //     return (num != num2);
+    // }
 
-    return false;
+    return node;
 }
 
 InstructionNode* Parser::body()
@@ -530,7 +545,6 @@ InstructionNode* Parser::body()
     return stmtList;
 }
 
-//TODO:Finish for loop. So far all I did was get the result of the condition
 void Parser::for_stmt()
 {
     // parserDebug("for_stmt");
@@ -564,7 +578,7 @@ void Parser::for_stmt()
         syntax_error();
     }
 
-    result = condition();
+    condition();
 
     t = lexer.getToken();
     if (t.tokenType != COMMA)

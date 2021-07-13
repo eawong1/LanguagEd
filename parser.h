@@ -28,6 +28,7 @@ struct AssignStmtNode
     Lexer::Token op;
 };
 
+
 struct InstructionNode
 {
     InstructionType type;
@@ -50,11 +51,11 @@ struct InstructionNode
         string num1;
         string num2;
         Lexer::Token op;
-        struct InstructionNode* target; 
+        int targetIndex; 
     } cjmp;
     struct 
     {
-        struct InstructionNode* target;
+        int targetIndex;
     } jmp;
 
     InstructionNode* next; 
@@ -86,7 +87,7 @@ class Parser
         void for_loop();
         InstructionNode* print_line();
         AssignStmtNode arithmetic();
-        bool condition();
+        AssignStmtNode condition();
         InstructionNode* body();
         void for_stmt();
         string primary();
