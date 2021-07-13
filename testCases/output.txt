@@ -1,1 +1,8 @@
-ERROR: The variable b has not been defined yet.
+hello_world
+this_is_a_test
+assignment
+5
+10
+24
+2
+1

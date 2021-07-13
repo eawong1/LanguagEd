@@ -58,7 +58,7 @@ struct InstructionNode
         int targetIndex;
     } jmp;
 
-    InstructionNode* next; 
+    InstructionNode* next = NULL;
     
 };
 
@@ -75,13 +75,13 @@ class Parser
         Lexer::Token peek();
     public:
         static vector<Variable> variableList;
-        static vector<struct InstructionNode *> instructions;
-        void program();
-        void program_body();
+        // static vector<struct InstructionNode *> instructions;
+        InstructionNode* program();
+        InstructionNode* program_body();
         InstructionNode* stmt_list();
         InstructionNode* stmt();
         InstructionNode* print_stmt();
-        string assign_stmt();
+        InstructionNode* assign_stmt();
         void if_stmt();
         void else_stmt();
         void for_loop();

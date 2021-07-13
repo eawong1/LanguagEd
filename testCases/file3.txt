@@ -8,8 +8,17 @@ print "hello_world"
 if a == b
 {
 print "a=b"
+}
+else
+{
+print "a!=b"
+}
 if a < b
 {
 c = 1
+}
+else
+{
+c = 2
 }
 print c

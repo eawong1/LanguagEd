@@ -6,12 +6,12 @@
 
 using namespace std;
 
-void execute()
+void execute(InstructionNode *instructions)
 {
-    for (int i = 0; i < Parser::instructions.size(); i++)
+    InstructionNode *temp = instructions;
+    while (temp != NULL)
     {
-        InstructionNode *temp = Parser::instructions[i];
-        //TODO: create while loop and create append a NOOP as the next for everything but conditional types
+        // cout << "it gets here" << endl;
         if (temp->type == ASSIGN)
         {
             Variable *var = &Parser::variableList[temp->assign.lhsIndex];
@@ -83,22 +83,26 @@ void execute()
                 result = (num != num2);
             }
 
-            if(!result)
-            {
-                i = temp->cjmp.targetIndex - 1;
-            }
         }
         else if (temp->type == JMP)
         {
         }
+
+        temp = temp->next;
     }
 
+    // for (int i = 0; i < Parser::instructions.size(); i++)
+    // {
+    //     InstructionNode *temp = Parser::instructions[i];
+
+    // }
+
     //clear vector from memory to avoid mem leak
-    for (int i = 0; i < Parser::instructions.size(); i++)
-    {
-        delete Parser::instructions[i];
-    }
-    Parser::instructions.clear(); //to clear all the nulls from the vector
+    // for (int i = 0; i < Parser::instructions.size(); i++)
+    // {
+    //     delete Parser::instructions[i];
+    // }
+    // Parser::instructions.clear(); //to clear all the nulls from the vector
 }
 
 int main(int argc, char **argv)
@@ -112,7 +116,7 @@ int main(int argc, char **argv)
     // lexer.readLine(); //reads the first line of the file
 
     Parser parser;
-    parser.program();
+    InstructionNode *instructions = parser.program();
 
-    execute();
+    execute(instructions);
 }

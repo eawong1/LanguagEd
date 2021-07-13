@@ -11,7 +11,7 @@ using namespace std;
 //defining vector 
 vector<Variable> Parser::variableList;
 
-vector<struct InstructionNode *> Parser::instructions;
+// vector<struct InstructionNode *> Parser::instructions;
 
 void parserDebug(string method)
 {
@@ -38,17 +38,19 @@ Lexer::Token Parser::peek()
     return t;
 }
 
-void Parser::program()
+InstructionNode* Parser::program()
 {
     // parserDebug("program");
 
-    program_body();
+    InstructionNode *instructions;
+    instructions = program_body();
 }
 
-void Parser::program_body()
+InstructionNode* Parser::program_body()
 {
     // parserDebug("program_body");
-    stmt_list();
+    InstructionNode *instructions;
+    instructions = stmt_list();
 }
 
 InstructionNode* Parser::stmt_list()
@@ -56,6 +58,7 @@ InstructionNode* Parser::stmt_list()
     // parserDebug("stmt_list");
     // cout << "it gets here" << endl;
     InstructionNode* stmtList = NULL;
+    // InstructionNode* nextInst = NULL;
     stmtList = stmt();
 
     Lexer::Token t = peek();
@@ -63,7 +66,12 @@ InstructionNode* Parser::stmt_list()
     if (t.tokenType == PRINT || t.tokenType == ID || t.tokenType == IF || t.tokenType == FOR)
     {
         cout << flush; //need to flush the stream to avoid buffer overflow 
-        stmtList->next = stmt_list();
+        InstructionNode *temp = stmtList;
+        while(temp->next != NULL)
+        {
+            temp = temp->next;
+        }
+        temp->next = stmt_list();
     }
 
     return stmtList;
@@ -81,7 +89,7 @@ InstructionNode* Parser::stmt()
     }
     else if (t.tokenType == ID)
     {
-        assign_stmt();
+        stmtList = assign_stmt();
     }
     else if (t.tokenType == IF)
     {
@@ -112,10 +120,11 @@ InstructionNode* Parser::print_stmt()
         print = print_line();
     }
 
+
     return print;
 }
 
-string Parser::assign_stmt()
+InstructionNode* Parser::assign_stmt()
 {
     // parserDebug("assign_stmt");
 
@@ -126,7 +135,7 @@ string Parser::assign_stmt()
     AssignStmtNode tempNode;
 
     // tempNode.op.tokenType = NOOP;
-    assignment->next = NULL;
+    
     assignment->type = ASSIGN;
 
     if (t.tokenType != ID)
@@ -214,9 +223,9 @@ string Parser::assign_stmt()
         // }
     }
 
-    instructions.push_back(assignment);
+    // instructions.push_back(assignment);
 
-    return id;
+    return assignment;
 }
 
 void Parser::if_stmt()
@@ -253,10 +262,10 @@ void Parser::if_stmt()
     }
     // result = true;
 
-    ifCondition->cjmp.targetIndex = instructions.size() + 2;
+    // ifCondition->cjmp.targetIndex = instructions.size() + 2;
 
-    instructions.push_back(ifCondition);
-    instructions.push_back(bodyList);
+    // instructions.push_back(ifCondition);
+    // instructions.push_back(bodyList);
     
 }
 
@@ -353,8 +362,7 @@ InstructionNode* Parser::print_line()
     Lexer lexer;
     Lexer::Token t = lexer.getToken();
     InstructionNode* instruction = new InstructionNode;
-    instruction->next = NULL;
-
+  
     if (t.tokenType != ID && t.tokenType != STRING)
     {
         syntax_error();
@@ -402,7 +410,8 @@ InstructionNode* Parser::print_line()
         instruction->type = OUTPUT;
         instruction->output.index = index;
     }
-    instructions.push_back(instruction);
+    // instructions.push_back(instruction);
+
 
     return instruction;
 }
@@ -549,26 +558,26 @@ void Parser::for_stmt()
 {
     // parserDebug("for_stmt");
 
-    string id = assign_stmt();
+    assign_stmt();
     int value = 0;
 
-    for (Variable var : variableList)
-    {
-        if (var.id == id)
-        {
-            //if the user doesn't provide an int as the increment value it will cause an exception that spits out an error
-            try
-            {
-                value = stoi(var.value);
-            }
-            catch (const std::exception &e)
-            {
-                cout << "Error for-loop requires an int as the increment value" << endl;
-            }
+    // for (Variable var : variableList)
+    // {
+    //     if (var.id == id)
+    //     {
+    //         //if the user doesn't provide an int as the increment value it will cause an exception that spits out an error
+    //         try
+    //         {
+    //             value = stoi(var.value);
+    //         }
+    //         catch (const std::exception &e)
+    //         {
+    //             cout << "Error for-loop requires an int as the increment value" << endl;
+    //         }
 
-            break;
-        }
-    }
+    //         break;
+    //     }
+    // }
 
     Lexer lexer;
     Lexer::Token t = lexer.getToken();
