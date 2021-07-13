@@ -9,6 +9,14 @@ using namespace std;
 void execute(InstructionNode *instructions)
 {
     InstructionNode *temp = instructions;
+    InstructionNode *temp2 = instructions;
+
+    while (temp2 != NULL)
+    {
+        cout << "Type: " << temp2->type << endl;
+        temp2 = temp2->next;
+    }
+
     while (temp != NULL)
     {
         // cout << "it gets here" << endl;
@@ -19,6 +27,8 @@ void execute(InstructionNode *instructions)
             if (temp->assign.op.tokenType == NOOP)
             {
                 var->value = temp->assign.rhs1;
+                // cout << "var value: " << var->value << endl;
+                // cout << "array value: " << Parser::variableList[temp->assign.lhsIndex].value << endl;
             }
             else
             {
@@ -49,13 +59,21 @@ void execute(InstructionNode *instructions)
         else if (temp->type == OUTPUT)
         {
             Variable var = Parser::variableList[temp->output.index];
+            // cout << "index: " << temp->output.index << endl;
             cout << var.value << endl;
         }
         else if (temp->type == CJMP)
         {
-            int num = stoi(temp->cjmp.num1);
-            int num2 = stoi(temp->cjmp.num2);
+            // cout << "num1: " << temp->cjmp.num1 << endl;
+            //TODO: values not set in the array when num1 and num2 were created... values are set after during compilation stage. 
+            // cout << "it gets here cjmp" << endl;
+            int numIndex = temp->cjmp.num1Index;
+            int num2Index = temp->cjmp.num2Index;
             Lexer::Token t = temp->cjmp.op;
+
+            int num = stoi(Parser::variableList[numIndex].value);
+            int num2 = stoi(Parser::variableList[num2Index].value);
+
 
             bool result = false;
             if (t.tokenType == GREATER)
@@ -83,12 +101,20 @@ void execute(InstructionNode *instructions)
                 result = (num != num2);
             }
 
+            if(!result)
+            {
+                temp = temp->cjmp.target;
+            }
+
         }
         else if (temp->type == JMP)
         {
         }
 
-        temp = temp->next;
+        if(temp != NULL)
+        {
+            temp = temp->next;
+        }
     }
 
     // for (int i = 0; i < Parser::instructions.size(); i++)
@@ -103,6 +129,14 @@ void execute(InstructionNode *instructions)
     //     delete Parser::instructions[i];
     // }
     // Parser::instructions.clear(); //to clear all the nulls from the vector
+
+    InstructionNode* deleted = instructions;
+    while(deleted != NULL)
+    {
+        InstructionNode* temp = deleted->next;
+        delete deleted;
+        deleted = temp;
+    }
 }
 
 int main(int argc, char **argv)

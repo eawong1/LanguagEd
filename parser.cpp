@@ -60,7 +60,6 @@ InstructionNode* Parser::stmt_list()
     InstructionNode* stmtList = NULL;
     // InstructionNode* nextInst = NULL;
     stmtList = stmt();
-
     Lexer::Token t = peek();
 
     if (t.tokenType == PRINT || t.tokenType == ID || t.tokenType == IF || t.tokenType == FOR)
@@ -93,7 +92,7 @@ InstructionNode* Parser::stmt()
     }
     else if (t.tokenType == IF)
     {
-        if_stmt();
+        stmtList = if_stmt();
     }
     else if (t.tokenType == FOR)
     {
@@ -119,7 +118,7 @@ InstructionNode* Parser::print_stmt()
     {
         print = print_line();
     }
-
+    
 
     return print;
 }
@@ -164,11 +163,7 @@ InstructionNode* Parser::assign_stmt()
             Variable tempVar;
             tempVar.id = var;
             variableList.push_back(tempVar);
-
             assignment->assign.lhsIndex = varIndex;
-            // cout << "var size: " << variableList.size() << endl;
-            // cout << "var Index: " << varIndex << endl;
-            // cout << "value: " << variableList[varIndex].id << endl;
         }
     }
 
@@ -228,7 +223,7 @@ InstructionNode* Parser::assign_stmt()
     return assignment;
 }
 
-void Parser::if_stmt()
+InstructionNode* Parser::if_stmt()
 {
     // parserDebug("if_stmt");
 
@@ -246,8 +241,11 @@ void Parser::if_stmt()
 
     AssignStmtNode node = condition();
     // cout << "result: " << result << endl;
-    ifCondition->cjmp.num1 = node.num1;
-    ifCondition->cjmp.num2 = node.num2;
+    // cout << "node num1: " << node.num1 << endl;
+    // cout << "node num2: " << node.num2 << endl;
+
+    ifCondition->cjmp.num1Index = stoi(node.num1);
+    ifCondition->cjmp.num2Index = stoi(node.num2);
     ifCondition->cjmp.op = node.op;
 
     bodyList = body();
@@ -266,7 +264,23 @@ void Parser::if_stmt()
 
     // instructions.push_back(ifCondition);
     // instructions.push_back(bodyList);
+
+    InstructionNode* temp = bodyList;
+    while(temp->next != NULL)
+    {
+        temp = temp->next;
+    }
     
+    ifCondition->cjmp.target = temp->next;
+    
+    temp = ifCondition;
+    while(temp->next != NULL)
+    {
+        temp = temp->next;
+    }
+    ifCondition->next = bodyList;
+
+    return ifCondition;
 }
 
 void Parser::else_stmt()
@@ -487,12 +501,12 @@ AssignStmtNode Parser::condition()
     else
     {
         string id = t.lexeme;
-        for (Variable var : variableList)
+        for(int i = 0; i < variableList.size(); i++)
         {
+            Variable var = variableList[i];
             if (id == var.id)
             {
-                // num = stoi(var.value);
-                node.num1 = var.value;
+                node.num1 = to_string(i);
                 break;
             }
         }
@@ -500,33 +514,7 @@ AssignStmtNode Parser::condition()
 
     t = relop();
     node.op = t;
-    // num2 = stoi(primary());
     node.num2 = primary();
-
-    // if (t.tokenType == GREATER)
-    // {
-    //     return (num > num2);
-    // }
-    // else if (t.tokenType == LESS)
-    // {
-    //     return (num < num2);
-    // }
-    // else if (t.tokenType == GREATER_EQUAL)
-    // {
-    //     return (num >= num2);
-    // }
-    // else if (t.tokenType == LESS_EQUAL)
-    // {
-    //     return (num <= num2);
-    // }
-    // else if (t.tokenType == EQUALTO)
-    // {
-    //     return (num == num2);
-    // }
-    // else if (t.tokenType == NOT_EQUAL)
-    // {
-    //     return (num != num2);
-    // }
 
     return node;
 }
@@ -561,23 +549,6 @@ void Parser::for_stmt()
     assign_stmt();
     int value = 0;
 
-    // for (Variable var : variableList)
-    // {
-    //     if (var.id == id)
-    //     {
-    //         //if the user doesn't provide an int as the increment value it will cause an exception that spits out an error
-    //         try
-    //         {
-    //             value = stoi(var.value);
-    //         }
-    //         catch (const std::exception &e)
-    //         {
-    //             cout << "Error for-loop requires an int as the increment value" << endl;
-    //         }
-
-    //         break;
-    //     }
-    // }
 
     Lexer lexer;
     Lexer::Token t = lexer.getToken();
@@ -619,14 +590,17 @@ string Parser::primary()
     else if (t.tokenType == ID)
     {
         string varValue = "";
-        for (Variable variable : variableList)
+        string index = "";
+        for(int i = 0; i < variableList.size(); i++)
         {
+            Variable variable = variableList[i];
             if (variable.id == t.lexeme)
             {
-                varValue = variable.value;
+                index = to_string(i);
+                break;
             }
         }
-        return varValue;
+        return index;
     }
 }
 

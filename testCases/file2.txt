@@ -1,6 +1,7 @@
 a = 5
 b = 4
 c = 0
+print a
 if a != b
 {
 print "hello_world"
@@ -8,6 +9,7 @@ print "hello_world"
 if a == b
 {
 print "a=b"
+}
 if a < b
 {
 c = 1

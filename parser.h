@@ -9,7 +9,7 @@
 
 enum InstructionType
 {
-    ASSIGN,
+    ASSIGN = 1000,
     OUTPUT,
     CJMP,
     JMP
@@ -48,10 +48,11 @@ struct InstructionNode
 
     struct 
     {
-        string num1;
-        string num2;
+        int num1Index;
+        int num2Index;
         Lexer::Token op;
-        int targetIndex; 
+        
+        InstructionNode *target;
     } cjmp;
     struct 
     {
@@ -82,7 +83,7 @@ class Parser
         InstructionNode* stmt();
         InstructionNode* print_stmt();
         InstructionNode* assign_stmt();
-        void if_stmt();
+        InstructionNode* if_stmt();
         void else_stmt();
         void for_loop();
         InstructionNode* print_line();
