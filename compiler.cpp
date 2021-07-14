@@ -6,21 +6,10 @@
 
 using namespace std;
 
-//TODO: Jump Target not working :( 
 void execute(InstructionNode *instructions)
 {
     InstructionNode *temp = instructions;
     InstructionNode *temp2 = instructions;
-
-    // while (temp2 != NULL)
-    // {
-    //     cout << "Type: " << temp2->type << endl;
-    //     if(temp2->type == CJMP)
-    //     {
-    //         cout << "Target: " << temp2->cjmp.target->type << endl;
-    //     }
-    //     temp2 = temp2->next;
-    // }
 
     while (temp != NULL)
     {
@@ -64,13 +53,11 @@ void execute(InstructionNode *instructions)
         else if (temp->type == OUTPUT)
         {
             Variable var = Parser::variableList[temp->output.index];
-            // cout << "index: " << temp->output.index << endl;
             cout << var.value << endl;
         }
         else if (temp->type == CJMP)
         {
-            // cout << "num1: " << temp->cjmp.num1 << endl;
-            // cout << "it gets here cjmp" << endl;
+          
             int numIndex = temp->cjmp.num1Index;
             int num2Index = temp->cjmp.num2Index;
             Lexer::Token t = temp->cjmp.op;
@@ -108,7 +95,6 @@ void execute(InstructionNode *instructions)
             if(!result)
             {
                 temp = temp->cjmp.target;
-                // cout << "Jump target: " << temp->type << endl;
             }
 
         }
@@ -122,18 +108,6 @@ void execute(InstructionNode *instructions)
         }
     }
 
-    // for (int i = 0; i < Parser::instructions.size(); i++)
-    // {
-    //     InstructionNode *temp = Parser::instructions[i];
-
-    // }
-
-    //clear vector from memory to avoid mem leak
-    // for (int i = 0; i < Parser::instructions.size(); i++)
-    // {
-    //     delete Parser::instructions[i];
-    // }
-    // Parser::instructions.clear(); //to clear all the nulls from the vector
 
     InstructionNode* deleted = instructions;
     while(deleted != NULL)

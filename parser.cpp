@@ -187,16 +187,7 @@ InstructionNode* Parser::assign_stmt()
         assignment->assign.rhs1 = num1;
         assignment->assign.rhs2 = num2;
         assignment->assign.op = op;
-        // for (int i = 0; i < variableList.size(); i++)
-        // {
-        //     string variable = variableList[i].id;
-            
-        //     if (variable == id)
-        //     {
-        //         variableList[i].value = num;
-                
-        //     }
-        // }
+  
     }
     else if (t.tokenType == STRING)
     {
@@ -206,16 +197,6 @@ InstructionNode* Parser::assign_stmt()
         assignment->assign.rhs2 = "";
         assignment->assign.op.tokenType = NOOP;
 
-        // cout << "assignment: " << assignment->assign.op << endl;
-        // for (int i = 0; i < variableList.size(); i++)
-        // {
-        //     string variable = variableList[i].id;
-
-        //     if (variable == id)
-        //     {
-        //         variableList[i].value = t.lexeme;
-        //     }
-        // }
     }
 
     // instructions.push_back(assignment);
@@ -271,7 +252,7 @@ InstructionNode* Parser::if_stmt()
         temp = temp->next;
     }
     
-    // cout << "before jump: " << temp->type << endl;
+    //block is an instruction that does nothing and is solely used as a target for the if-statement to jump to 
     InstructionNode* block = new InstructionNode;
     block->type = BLOCK;
     temp->next = block;
