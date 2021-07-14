@@ -6,16 +6,21 @@
 
 using namespace std;
 
+//TODO: Jump Target not working :( 
 void execute(InstructionNode *instructions)
 {
     InstructionNode *temp = instructions;
     InstructionNode *temp2 = instructions;
 
-    while (temp2 != NULL)
-    {
-        cout << "Type: " << temp2->type << endl;
-        temp2 = temp2->next;
-    }
+    // while (temp2 != NULL)
+    // {
+    //     cout << "Type: " << temp2->type << endl;
+    //     if(temp2->type == CJMP)
+    //     {
+    //         cout << "Target: " << temp2->cjmp.target->type << endl;
+    //     }
+    //     temp2 = temp2->next;
+    // }
 
     while (temp != NULL)
     {
@@ -65,7 +70,6 @@ void execute(InstructionNode *instructions)
         else if (temp->type == CJMP)
         {
             // cout << "num1: " << temp->cjmp.num1 << endl;
-            //TODO: values not set in the array when num1 and num2 were created... values are set after during compilation stage. 
             // cout << "it gets here cjmp" << endl;
             int numIndex = temp->cjmp.num1Index;
             int num2Index = temp->cjmp.num2Index;
@@ -104,6 +108,7 @@ void execute(InstructionNode *instructions)
             if(!result)
             {
                 temp = temp->cjmp.target;
+                // cout << "Jump target: " << temp->type << endl;
             }
 
         }

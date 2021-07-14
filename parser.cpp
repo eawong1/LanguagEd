@@ -271,6 +271,10 @@ InstructionNode* Parser::if_stmt()
         temp = temp->next;
     }
     
+    // cout << "before jump: " << temp->type << endl;
+    InstructionNode* block = new InstructionNode;
+    block->type = BLOCK;
+    temp->next = block;
     ifCondition->cjmp.target = temp->next;
     
     temp = ifCondition;

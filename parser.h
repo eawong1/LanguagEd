@@ -9,7 +9,8 @@
 
 enum InstructionType
 {
-    ASSIGN = 1000,
+    BLOCK = 1000, 
+    ASSIGN,
     OUTPUT,
     CJMP,
     JMP

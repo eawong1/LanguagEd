@@ -1,7 +1,6 @@
 a = 5
 b = 4
 c = 0
-print a
 if a != b
 {
 print "hello_world"
