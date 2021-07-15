@@ -25,21 +25,15 @@ void execute(InstructionNode *instructions)
     {
         bool jumped = false;
         // cout << "it gets here" << endl;
-        cout << "Type: " << temp->type << endl;
         if (temp->type == ASSIGN)
         {
             Variable *var = &Parser::variableList[temp->assign.lhsIndex];
-            // cout << "var: " << var->id << endl;
             if (temp->assign.op.tokenType == NOOP)
             {
-                var->value = temp->assign.rhs1; //! This is causing a segfault
-                cout << "it gets here" << endl;
-                // cout << "var value: " << var->value << endl;
-                // cout << "array value: " << Parser::variableList[temp->assign.lhsIndex].value << endl;
+                var->value = temp->assign.rhs1; 
             }
             else
             {
-                // cout << "op1: " << temp->assign.rhs1 << endl;
                 int op1 = stoi(temp->assign.rhs1);
                 int op2 = stoi(temp->assign.rhs2);
                 Lexer::Token optr = temp->assign.op;
@@ -118,8 +112,8 @@ void execute(InstructionNode *instructions)
 
         if(temp != NULL && !jumped)
         {
-            temp = temp->next;
         }
+        temp = temp->next;
     }
 
 

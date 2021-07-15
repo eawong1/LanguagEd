@@ -163,8 +163,9 @@ InstructionNode* Parser::assign_stmt()
             Variable tempVar;
             tempVar.id = var;
             variableList.push_back(tempVar);
-            assignment->assign.lhsIndex = varIndex;
         }
+        assignment->assign.lhsIndex = varIndex;
+        
     }
 
     t = lexer.getToken();
@@ -185,8 +186,11 @@ InstructionNode* Parser::assign_stmt()
         
 
         assignment->assign.rhs1 = num1;
+        // cout << "Num1:  " << num1 << endl;
         assignment->assign.rhs2 = num2;
+        // cout << "Num2:  " << num2 << endl;
         assignment->assign.op = op;
+        // cout << "OP: " << op.tokenType << endl;
   
     }
     else if (t.tokenType == STRING)
@@ -200,6 +204,7 @@ InstructionNode* Parser::assign_stmt()
     }
 
     // instructions.push_back(assignment);
+
 
     return assignment;
 }
