@@ -10,17 +10,30 @@ void execute(InstructionNode *instructions)
 {
     InstructionNode *temp = instructions;
     InstructionNode *temp2 = instructions;
+    
+    // while(temp2 != NULL)
+    // {
+    //     cout << "Type: " << temp2->type << endl;
+    //     if(temp2->type == CJMP)
+    //     {
+    //         cout << "Jmp type: " << temp2->cjmp.target->type << endl;
+    //     }
+    //     temp2 = temp2->next;
+    // }
 
     while (temp != NULL)
     {
+        bool jumped = false;
         // cout << "it gets here" << endl;
+        cout << "Type: " << temp->type << endl;
         if (temp->type == ASSIGN)
         {
             Variable *var = &Parser::variableList[temp->assign.lhsIndex];
             // cout << "var: " << var->id << endl;
             if (temp->assign.op.tokenType == NOOP)
             {
-                var->value = temp->assign.rhs1;
+                var->value = temp->assign.rhs1; //! This is causing a segfault
+                cout << "it gets here" << endl;
                 // cout << "var value: " << var->value << endl;
                 // cout << "array value: " << Parser::variableList[temp->assign.lhsIndex].value << endl;
             }
@@ -91,10 +104,11 @@ void execute(InstructionNode *instructions)
             {
                 result = (num != num2);
             }
-
+            
             if(!result)
             {
                 temp = temp->cjmp.target;
+                jumped = true;
             }
 
         }
@@ -102,7 +116,7 @@ void execute(InstructionNode *instructions)
         {
         }
 
-        if(temp != NULL)
+        if(temp != NULL && !jumped)
         {
             temp = temp->next;
         }
