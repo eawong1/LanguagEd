@@ -10,7 +10,7 @@ void execute(InstructionNode *instructions)
 {
     InstructionNode *temp = instructions;
     // InstructionNode *temp2 = instructions;
-    
+
     // while(temp2 != NULL)
     // {
     //     cout << "Type: " << temp2->type << endl;
@@ -24,14 +24,14 @@ void execute(InstructionNode *instructions)
     while (temp != NULL)
     {
         bool jumped = false;
-        cout << "Type:  " << temp->type << endl;
+        // cout << "Type:  " << temp->type << endl;
         // cout << "it gets here" << endl;
         if (temp->type == ASSIGN)
         {
             Variable *var = &Parser::variableList[temp->assign.lhsIndex];
             if (temp->assign.op.tokenType == NOOP)
             {
-                var->value = temp->assign.rhs1; 
+                var->value = temp->assign.rhs1;
             }
             else
             {
@@ -65,7 +65,7 @@ void execute(InstructionNode *instructions)
         }
         else if (temp->type == CJMP)
         {
-          
+
             int numIndex = temp->cjmp.num1Index;
             int num2Index = temp->cjmp.num2Index;
             Lexer::Token t = temp->cjmp.op;
@@ -73,48 +73,61 @@ void execute(InstructionNode *instructions)
             int num = stoi(Parser::variableList[numIndex].value);
             int num2 = stoi(Parser::variableList[num2Index].value);
 
+            // cout << "num1: " << num << endl;
+            // cout << "num2: " << num2 << endl;
 
             bool result = false;
-            if (t.tokenType == GREATER)
+            if (temp->cjmp.autoFalse)
             {
-                result = (num > num2);
-            }
-            else if (t.tokenType == LESS)
-            {
-                result = (num < num2);
-            }
-            else if (t.tokenType == GREATER_EQUAL)
-            {
-                result = (num >= num2);
-            }
-            else if (t.tokenType == LESS_EQUAL)
-            {
-                result = (num <= num2);
-            }
-            else if (t.tokenType == EQUALTO)
-            {
-                result = (num == num2);
-            }
-            else if (t.tokenType == NOT_EQUAL)
-            {
-                result = (num != num2);
-            }
-            
-            if(!result)
-            {
-                if(temp->cjmp.elseStmt)
+                if (t.tokenType == GREATER)
                 {
-                    cout << "it gets here" << endl;
-                    temp = temp->cjmp.elseTarget;
-                    cout << "temp: " << temp->type << endl;
-                    cout << "temp next" << temp->next->type << endl;
+                    result = (num > num2);
                 }
-                else
+                else if (t.tokenType == LESS)
                 {
-                    temp = temp->cjmp.target;
+                    result = (num < num2);
                 }
+                else if (t.tokenType == GREATER_EQUAL)
+                {
+                    result = (num >= num2);
+                }
+                else if (t.tokenType == LESS_EQUAL)
+                {
+                    result = (num <= num2);
+                }
+                else if (t.tokenType == EQUALTO)
+                {
+                    // cout << "equal to" << endl;
+                    result = (num == num2);
+                }
+                else if (t.tokenType == NOT_EQUAL)
+                {
+                    result = (num != num2);
+                }
+            }
+            else
+            {
+                result = temp->cjmp.autoFalse;
             }
 
+            if (!result)
+            {
+                // if (temp->cjmp.elseStmt)
+                // {
+                //     cout << "it gets here" << endl;
+                //     temp = temp->cjmp.elseTarget;
+                //     cout << "temp: " << temp->type << endl;
+                //     cout << "temp next" << temp->next->type << endl;
+                // }
+                // else
+                // {
+                    temp = temp->cjmp.target;
+                // }
+            }
+            // else if(result && temp->cjmp.elseStmt)
+            // {
+
+            // }
         }
         else if (temp->type == JMP)
         {
@@ -123,11 +136,10 @@ void execute(InstructionNode *instructions)
         temp = temp->next;
     }
 
-
-    InstructionNode* deleted = instructions;
-    while(deleted != NULL)
+    InstructionNode *deleted = instructions;
+    while (deleted != NULL)
     {
-        InstructionNode* temp = deleted->next;
+        InstructionNode *temp = deleted->next;
         delete deleted;
         deleted = temp;
     }

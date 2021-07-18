@@ -245,24 +245,6 @@ InstructionNode* Parser::if_stmt()
         // {
         //     temp = temp->next;
         // }
-        InstructionNode* temp = ifCondition;
-        while (temp->next != NULL)
-        {
-            temp = temp->next;
-        }
-        InstructionNode* block = new InstructionNode;
-        block->type = BLOCK;
-        temp->next = block;
-        ifCondition->cjmp.elseTarget = temp->next;
-
-        temp = ifCondition;
-        while (temp->next != NULL)
-        {
-            temp = temp->next;
-        }
-        ifCondition->next = elseStmt;
-
-        
     }
     // result = true;
     
@@ -285,9 +267,44 @@ InstructionNode* Parser::if_stmt()
     }
     ifCondition->next = bodyList;
 
+    //TODO: Change it so that bodylist->next is set first before adding else statement to ifcondition
     if(isElse)
     {
-        
+        InstructionNode* tempIfCondition = new InstructionNode;
+        tempIfCondition->cjmp.autoFalse = false;
+        bodyList->next = tempIfCondition;
+
+        //adds block before else statement
+        temp = ifCondition;
+        while (temp->next != NULL)
+        {
+            temp = temp->next;
+        }
+        block = new InstructionNode;
+        block->type = BLOCK;
+        temp->next = block;
+        ifCondition->cjmp.elseTarget = temp->next;
+
+        temp = ifCondition;
+        while (temp->next != NULL)
+        {
+            temp = temp->next;
+        }
+        ifCondition->next = elseStmt;
+
+        //adds block after else statement
+        block = new InstructionNode;
+        block->type = BLOCK;
+        temp->next = block;
+
+        temp = ifCondition;
+        while (temp->next != NULL)
+        {
+            temp = temp->next;
+        }
+
+        tempIfCondition->cjmp.target = temp->next;
+        // ifCondition->cjmp.noElseTarget = temp->next;
     }
 
     return ifCondition;
@@ -435,7 +452,6 @@ InstructionNode* Parser::print_line()
     return instruction;
 }
 
-//TODO: no setting num1 and num2 properly fix that 
 AssignStmtNode Parser::arithmetic()
 {
     // parserDebug("arithmetic");
@@ -461,31 +477,6 @@ AssignStmtNode Parser::arithmetic()
         tempNode.num2 = num2;
     }
     
-    // int ans = 0;
-    // if (num2Exist)
-    // {
-    //     int op1 = stoi(num);
-    //     int op2 = stoi(num2);
-
-    //     if (optr.tokenType == PLUS)
-    //     {
-    //         ans = op1 + op2;
-    //     }
-    //     else if (optr.tokenType == MINUS)
-    //     {
-    //         ans = op1 - op2;
-    //     }
-    //     else if (optr.tokenType == MULT)
-    //     {
-    //         ans = op1 * op2;
-    //     }
-    //     else if (optr.tokenType == DIV)
-    //     {
-    //         ans = op1 / op2;
-    //     }
-
-    //     num = to_string(ans);
-    // }
 
     return tempNode;
 }

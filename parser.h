@@ -53,9 +53,11 @@ struct InstructionNode
         int num2Index;
         Lexer::Token op;
         bool elseStmt = false;
+        bool autoFalse = true;
         
-        InstructionNode *target;
-        InstructionNode *elseTarget;
+        InstructionNode* target;
+        InstructionNode* elseTarget;
+        // InstructionNode* noElseTarget;
     } cjmp;
     struct 
     {
