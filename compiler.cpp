@@ -9,7 +9,7 @@ using namespace std;
 void execute(InstructionNode *instructions)
 {
     InstructionNode *temp = instructions;
-    InstructionNode *temp2 = instructions;
+    // InstructionNode *temp2 = instructions;
     
     // while(temp2 != NULL)
     // {
@@ -24,6 +24,7 @@ void execute(InstructionNode *instructions)
     while (temp != NULL)
     {
         bool jumped = false;
+        cout << "Type:  " << temp->type << endl;
         // cout << "it gets here" << endl;
         if (temp->type == ASSIGN)
         {
@@ -101,8 +102,17 @@ void execute(InstructionNode *instructions)
             
             if(!result)
             {
-                temp = temp->cjmp.target;
-                jumped = true;
+                if(temp->cjmp.elseStmt)
+                {
+                    cout << "it gets here" << endl;
+                    temp = temp->cjmp.elseTarget;
+                    cout << "temp: " << temp->type << endl;
+                    cout << "temp next" << temp->next->type << endl;
+                }
+                else
+                {
+                    temp = temp->cjmp.target;
+                }
             }
 
         }
@@ -110,9 +120,6 @@ void execute(InstructionNode *instructions)
         {
         }
 
-        if(temp != NULL && !jumped)
-        {
-        }
         temp = temp->next;
     }
 

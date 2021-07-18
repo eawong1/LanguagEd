@@ -165,7 +165,6 @@ InstructionNode* Parser::assign_stmt()
             variableList.push_back(tempVar);
         }
         assignment->assign.lhsIndex = varIndex;
-        
     }
 
     t = lexer.getToken();
@@ -186,11 +185,8 @@ InstructionNode* Parser::assign_stmt()
         
 
         assignment->assign.rhs1 = num1;
-        // cout << "Num1:  " << num1 << endl;
         assignment->assign.rhs2 = num2;
-        // cout << "Num2:  " << num2 << endl;
         assignment->assign.op = op;
-        // cout << "OP: " << op.tokenType << endl;
   
     }
     else if (t.tokenType == STRING)
@@ -212,7 +208,7 @@ InstructionNode* Parser::assign_stmt()
 InstructionNode* Parser::if_stmt()
 {
     // parserDebug("if_stmt");
-
+    bool isElse = false;
     InstructionNode* bodyList = NULL;
     InstructionNode* ifCondition = new InstructionNode;
     Lexer lexer;
@@ -226,9 +222,7 @@ InstructionNode* Parser::if_stmt()
     }
 
     AssignStmtNode node = condition();
-    // cout << "result: " << result << endl;
-    // cout << "node num1: " << node.num1 << endl;
-    // cout << "node num2: " << node.num2 << endl;
+   
 
     ifCondition->cjmp.num1Index = stoi(node.num1);
     ifCondition->cjmp.num2Index = stoi(node.num2);
@@ -238,19 +232,40 @@ InstructionNode* Parser::if_stmt()
     
 
     t = peek();
-    // cout << "token type: " << t.tokenType << endl;
-
+    
+    InstructionNode* elseStmt = NULL;
     if (t.tokenType == ELSE)
     {
-        else_stmt();
+        ifCondition->cjmp.elseStmt = true;
+        isElse = true;
+        elseStmt = else_stmt();
+        // cout << "else stmt: " << elseStmt->type << endl;
+
+        // while (temp->next != NULL)
+        // {
+        //     temp = temp->next;
+        // }
+        InstructionNode* temp = ifCondition;
+        while (temp->next != NULL)
+        {
+            temp = temp->next;
+        }
+        InstructionNode* block = new InstructionNode;
+        block->type = BLOCK;
+        temp->next = block;
+        ifCondition->cjmp.elseTarget = temp->next;
+
+        temp = ifCondition;
+        while (temp->next != NULL)
+        {
+            temp = temp->next;
+        }
+        ifCondition->next = elseStmt;
+
+        
     }
     // result = true;
-
-    // ifCondition->cjmp.targetIndex = instructions.size() + 2;
-
-    // instructions.push_back(ifCondition);
-    // instructions.push_back(bodyList);
-
+    
     InstructionNode* temp = bodyList;
     while(temp->next != NULL)
     {
@@ -270,30 +285,30 @@ InstructionNode* Parser::if_stmt()
     }
     ifCondition->next = bodyList;
 
+    if(isElse)
+    {
+        
+    }
+
     return ifCondition;
 }
 
-void Parser::else_stmt()
+InstructionNode* Parser::else_stmt()
 {
     // parserDebug("else_stmt");
 
     Lexer lexer;
     Lexer::Token t = lexer.getToken();
+    InstructionNode* instruction;
 
     if (t.tokenType != ELSE)
     {
         syntax_error();
     }
 
-    if (result)
-    {
-        result = false;
-    }
-    else if (!result)
-    {
-        result = true;
-    }
-    body();
+    instruction = body();
+
+    return instruction;
 }
 
 void Parser::for_loop()

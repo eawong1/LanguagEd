@@ -52,8 +52,10 @@ struct InstructionNode
         int num1Index;
         int num2Index;
         Lexer::Token op;
+        bool elseStmt = false;
         
         InstructionNode *target;
+        InstructionNode *elseTarget;
     } cjmp;
     struct 
     {
@@ -85,7 +87,7 @@ class Parser
         InstructionNode* print_stmt();
         InstructionNode* assign_stmt();
         InstructionNode* if_stmt();
-        void else_stmt();
+        InstructionNode* else_stmt();
         void for_loop();
         InstructionNode* print_line();
         AssignStmtNode arithmetic();
