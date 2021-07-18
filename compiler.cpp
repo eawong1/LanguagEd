@@ -70,8 +70,9 @@ void execute(InstructionNode *instructions)
             int num2Index = temp->cjmp.num2Index;
             Lexer::Token t = temp->cjmp.op;
 
-            int num = stoi(Parser::variableList[numIndex].value);
-            int num2 = stoi(Parser::variableList[num2Index].value);
+            // cout << "numIndex: " << numIndex << endl;
+            // cout << "num2Index: " << num2Index << endl;
+            // cout << "auto: " << temp->cjmp.autoFalse << endl;
 
             // cout << "num1: " << num << endl;
             // cout << "num2: " << num2 << endl;
@@ -79,6 +80,10 @@ void execute(InstructionNode *instructions)
             bool result = false;
             if (temp->cjmp.autoFalse)
             {
+                int num = stoi(Parser::variableList[numIndex].value);
+                int num2 = stoi(Parser::variableList[num2Index].value);
+
+
                 if (t.tokenType == GREATER)
                 {
                     result = (num > num2);
