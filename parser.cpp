@@ -239,14 +239,7 @@ InstructionNode* Parser::if_stmt()
         ifCondition->cjmp.elseStmt = true;
         isElse = true;
         elseStmt = else_stmt();
-        // cout << "else stmt: " << elseStmt->type << endl;
-
-        // while (temp->next != NULL)
-        // {
-        //     temp = temp->next;
-        // }
     }
-    // result = true;
     
     InstructionNode* temp = bodyList;
     while(temp->next != NULL)
@@ -265,12 +258,15 @@ InstructionNode* Parser::if_stmt()
     {
         temp = temp->next;
     }
-    ifCondition->next = bodyList;
+    temp->next = bodyList;
 
-    //TODO: Change it so that bodylist->next is set first before adding else statement to ifcondition
     if(isElse)
     {
+        //adds a if-stmt node that will always evaluate to false so if the actual if-stmt evaluates to true
+        //it will do what's in the body, then come across this ifstatement and jmp past the else stmt
+        //if the actual if-stmt evaluates to false it will just jmp past this condition and go to the else block
         InstructionNode* tempIfCondition = new InstructionNode;
+        tempIfCondition->type = CJMP;
         tempIfCondition->cjmp.autoFalse = false;
         bodyList->next = tempIfCondition;
 
@@ -290,21 +286,19 @@ InstructionNode* Parser::if_stmt()
         {
             temp = temp->next;
         }
-        ifCondition->next = elseStmt;
+        temp->next = elseStmt;
 
         //adds block after else statement
         block = new InstructionNode;
         block->type = BLOCK;
-        temp->next = block;
-
         temp = ifCondition;
-        while (temp->next != NULL)
+
+        while(temp->next != NULL)
         {
             temp = temp->next;
         }
-
+        temp->next = block;
         tempIfCondition->cjmp.target = temp->next;
-        // ifCondition->cjmp.noElseTarget = temp->next;
     }
 
     return ifCondition;

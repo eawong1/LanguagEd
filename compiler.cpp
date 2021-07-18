@@ -112,22 +112,16 @@ void execute(InstructionNode *instructions)
 
             if (!result)
             {
-                // if (temp->cjmp.elseStmt)
-                // {
-                //     cout << "it gets here" << endl;
-                //     temp = temp->cjmp.elseTarget;
-                //     cout << "temp: " << temp->type << endl;
-                //     cout << "temp next" << temp->next->type << endl;
-                // }
-                // else
-                // {
+                if (temp->cjmp.elseStmt)
+                {
+                    temp = temp->cjmp.elseTarget;
+                }
+                else
+                {
                     temp = temp->cjmp.target;
-                // }
+                }
             }
-            // else if(result && temp->cjmp.elseStmt)
-            // {
-
-            // }
+          
         }
         else if (temp->type == JMP)
         {

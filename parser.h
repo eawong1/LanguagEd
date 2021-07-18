@@ -57,7 +57,6 @@ struct InstructionNode
         
         InstructionNode* target;
         InstructionNode* elseTarget;
-        // InstructionNode* noElseTarget;
     } cjmp;
     struct 
     {
