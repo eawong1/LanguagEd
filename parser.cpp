@@ -583,8 +583,9 @@ ForStmtNode Parser::for_stmt()
 
     jmpPt->cjmp.num2Index = stoi(cond.num2);
     jmpPt->cjmp.op = cond.op;
+    jmpPt->cjmp.num2Literal = true;
 
-    cout << "cond2 index: " << cond.num2 << endl;
+    // cout << "cond2 index: " << cond.num2 << endl;
 
     instruction->next = jmpPt;
 

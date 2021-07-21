@@ -24,7 +24,7 @@ void execute(InstructionNode *instructions)
     while (temp != NULL)
     {
         bool jumped = false;
-        cout << "Type:  " << temp->type << endl;
+        // cout << "Type:  " << temp->type << endl;
         // cout << "it gets here" << endl;
         if (temp->type == ASSIGN)
         {
@@ -80,10 +80,27 @@ void execute(InstructionNode *instructions)
             bool result = false;
             if (temp->cjmp.autoFalse)
             {
-                cout << "num: " << Parser::variableList[numIndex].value << endl;
+                // cout << "num: " << Parser::variableList[numIndex].value << endl;
 
-                int num = stoi(Parser::variableList[numIndex].value);
-                int num2 = stoi(Parser::variableList[num2Index].value); //TODO: figure out what to do when num2 is a literal number and not an ID
+                int num = 0;
+                if(!temp->cjmp.num1Literal)
+                {
+                    num = stoi(Parser::variableList[numIndex].value);
+                }
+                else 
+                {
+                    num = numIndex;
+                }
+
+                int num2 = 0;
+                if(!temp->cjmp.num2Literal)
+                {
+                    num2 = stoi(Parser::variableList[num2Index].value); //TODO: figure out what to do when num2 is a literal number and not an ID
+                }
+                else
+                {
+                    num2 = num2Index;
+                }
 
                 if (t.tokenType == GREATER)
                 {

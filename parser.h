@@ -62,6 +62,9 @@ struct InstructionNode
         Lexer::Token op;
         bool elseStmt = false;
         bool autoFalse = true;
+        //boolean to see if numbers are literal numbers or just indexes
+        bool num1Literal = false;
+        bool num2Literal = false;
         
         InstructionNode* target;
         InstructionNode* elseTarget;
