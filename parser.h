@@ -16,6 +16,8 @@ enum InstructionType
     JMP
 };
 
+struct InstructionNode;
+
 struct Variable
 {
     string id = "";
@@ -27,6 +29,12 @@ struct AssignStmtNode
     string num1;
     string num2;
     Lexer::Token op;
+};
+
+struct ForStmtNode
+{
+    InstructionNode* instruction;
+    string incrementVal;
 };
 
 
@@ -60,7 +68,10 @@ struct InstructionNode
     } cjmp;
     struct 
     {
-        int targetIndex;
+        int incrementVal;
+        int varIndex; 
+
+        InstructionNode* target;
     } jmp;
 
     InstructionNode* next = NULL;
@@ -89,12 +100,12 @@ class Parser
         InstructionNode* assign_stmt();
         InstructionNode* if_stmt();
         InstructionNode* else_stmt();
-        void for_loop();
+        InstructionNode* for_loop();
         InstructionNode* print_line();
         AssignStmtNode arithmetic();
         AssignStmtNode condition();
         InstructionNode* body();
-        void for_stmt();
+        ForStmtNode for_stmt();
         string primary();
         Lexer::Token op();
         Lexer::Token relop();

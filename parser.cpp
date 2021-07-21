@@ -6,8 +6,6 @@
 
 using namespace std;
 
-//TODO: Redo everything :(
-
 //defining vector 
 vector<Variable> Parser::variableList;
 
@@ -21,6 +19,7 @@ void parserDebug(string method)
 void Parser::syntax_error()
 {
     cout << "SYNTAX ERROR" << endl;
+    exit(0); //terminates the program
 }
 
 void Parser::varNotFound(string var)
@@ -96,7 +95,7 @@ InstructionNode* Parser::stmt()
     }
     else if (t.tokenType == FOR)
     {
-        for_loop();
+        stmtList = for_loop();
     }
 
     return stmtList;
@@ -322,9 +321,11 @@ InstructionNode* Parser::else_stmt()
     return instruction;
 }
 
-void Parser::for_loop()
+InstructionNode* Parser::for_loop()
 {
     // parserDebug("for_loop");
+
+    InstructionNode* instruction;
 
     Lexer lexer;
     Lexer::Token t = lexer.getToken();
@@ -372,7 +373,9 @@ void Parser::for_loop()
     }
     else
     {
-        for_stmt();
+        ForStmtNode forNode = for_stmt();
+
+        instruction = forNode.instruction;
 
         t = lexer.getToken();
         if (t.tokenType != RPARENTHESES)
@@ -380,8 +383,30 @@ void Parser::for_loop()
             syntax_error();
         }
 
-        forLoop = true;
-        body();
+        InstructionNode* bodyStmt = body();
+
+        InstructionNode* jmpInstruct = new InstructionNode;
+        jmpInstruct->type = JMP;
+        jmpInstruct->jmp.incrementVal = stoi(forNode.incrementVal);
+        jmpInstruct->jmp.varIndex = instruction->assign.lhsIndex;
+        jmpInstruct->jmp.target = instruction;
+        bodyStmt->next = jmpInstruct;
+
+        InstructionNode* block = new InstructionNode;
+        block->type = BLOCK;
+        jmpInstruct->next = block;
+        
+     
+        instruction->next->cjmp.target = jmpInstruct->next;
+
+        InstructionNode* temp = instruction;
+        while(temp->next != NULL)
+        {
+            temp = temp->next;
+        }
+        temp->next = bodyStmt;
+
+        return instruction;
     }
 }
 
@@ -440,7 +465,6 @@ InstructionNode* Parser::print_line()
         instruction->type = OUTPUT;
         instruction->output.index = index;
     }
-    // instructions.push_back(instruction);
 
 
     return instruction;
@@ -470,7 +494,7 @@ AssignStmtNode Parser::arithmetic()
         tempNode.op = optr;
         tempNode.num2 = num2;
     }
-    
+
 
     return tempNode;
 }
@@ -526,19 +550,21 @@ InstructionNode* Parser::body()
     t = lexer.getToken();
     if (t.tokenType != CCURLY)
     {
-        syntax_error();
+        syntax_error(); 
     }
+
 
     return stmtList;
 }
 
-void Parser::for_stmt()
+ForStmtNode Parser::for_stmt()
 {
     // parserDebug("for_stmt");
+    ForStmtNode node;
 
-    assign_stmt();
-    int value = 0;
+    InstructionNode* instruction;
 
+    instruction = assign_stmt();
 
     Lexer lexer;
     Lexer::Token t = lexer.getToken();
@@ -548,7 +574,19 @@ void Parser::for_stmt()
         syntax_error();
     }
 
-    condition();
+    AssignStmtNode cond = condition();
+
+    InstructionNode* jmpPt = new InstructionNode;
+    jmpPt->type = CJMP;
+    jmpPt->cjmp.num1Index = stoi(cond.num1);
+
+
+    jmpPt->cjmp.num2Index = stoi(cond.num2);
+    jmpPt->cjmp.op = cond.op;
+
+    cout << "cond2 index: " << cond.num2 << endl;
+
+    instruction->next = jmpPt;
 
     t = lexer.getToken();
     if (t.tokenType != COMMA)
@@ -561,6 +599,11 @@ void Parser::for_stmt()
     {
         syntax_error();
     }
+
+    node.instruction = instruction;
+    node.incrementVal = t.lexeme;
+
+    return node;
 }
 
 string Parser::primary()

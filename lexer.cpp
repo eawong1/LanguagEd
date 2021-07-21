@@ -62,12 +62,15 @@ bool Lexer::readLine()
     string line;
     vector<string> splitted;
     //return 'file' and file evalutes to true when previous read was successful 
+    bool isOpen = file.is_open();
+    // cout << "isOpen: " << isOpen << endl;
     if(file.is_open() && getline(file, line) && lineResult)
     {
+        // cout << "it gets here" << endl;
         splitted = split(line, " ");
         //stack is LIFO so have to insert in reverse order
-        reverse(splitted.begin(),splitted.end());
-        for(string token : splitted)
+        reverse(splitted.begin(), splitted.end());
+        for (string token : splitted)
         {
             tokens.push_back(token);
         }
@@ -95,6 +98,7 @@ Lexer::Token Lexer::getToken()
     // cout << "size: " << tokens.size() << endl;
     // if(tokens.size() > 0)
     // cout << "last Element: " << tokens.back() << endl;
+    // cout << "it gets here" << endl;
     //if tokens stack is empty read the next line and repopulate it 
     if(tokens.empty())
     {
@@ -104,7 +108,6 @@ Lexer::Token Lexer::getToken()
     // {
     //     tokens.clear();
     // }
-    // cout << "LineResult: " << lineResult << endl;
     
     //if there are still more lines
     if(lineResult /*&& !isNullTerminator(tokens.top()[0])*/)
