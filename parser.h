@@ -29,6 +29,8 @@ struct AssignStmtNode
     string num1;
     string num2;
     Lexer::Token op;
+    bool isIndex1 = false;
+    bool isIndex2 = false;
 };
 
 struct ForStmtNode
@@ -37,6 +39,11 @@ struct ForStmtNode
     string incrementVal;
 };
 
+struct PrimaryNode //TODO: set this as the return type for primary and then rework code accordingly
+{
+    string index;
+    bool isIndex = false;
+};
 
 struct InstructionNode
 {
@@ -47,6 +54,7 @@ struct InstructionNode
         string rhs1;
         string rhs2;
         Lexer::Token op;
+        bool isIndex = false; //*Have to implement this in rest of code but this is so that arithmetic function knows if it is adding actual num or an index
 
     } assign;
     
@@ -109,7 +117,7 @@ class Parser
         AssignStmtNode condition();
         InstructionNode* body();
         ForStmtNode for_stmt();
-        string primary();
+        PrimaryNode primary();
         Lexer::Token op();
         Lexer::Token relop();
 };

@@ -6,6 +6,8 @@
 
 using namespace std;
 
+//TODO: Consider removing for loop with the keyword WITH
+
 //defining vector 
 vector<Variable> Parser::variableList;
 
@@ -344,8 +346,12 @@ InstructionNode* Parser::for_loop()
         }
         else if (t.tokenType == ID || t.tokenType == NUM)
         {
+            InstructionNode* assign = new InstructionNode;
+
             lexer.ungetToken(t);
             primary();
+            
+            assign->type = ASSIGN;
 
             t = lexer.getToken();
 
@@ -367,6 +373,26 @@ InstructionNode* Parser::for_loop()
             {
                 syntax_error();
             }
+            
+            int varIndex = 0;
+            string var = t.lexeme;
+            bool inList = false;
+            for (Variable variable : variableList)
+            {
+                if (var == variable.id)
+                {
+                    inList = true;
+                    break;
+                }
+                varIndex++;
+            }
+            if (!inList)
+            {
+                Variable tempVar;
+                tempVar.id = var;
+                variableList.push_back(tempVar);
+            }
+            assign->assign.lhsIndex = varIndex;
 
             body();
         }
@@ -477,8 +503,13 @@ AssignStmtNode Parser::arithmetic()
     AssignStmtNode tempNode;
     tempNode.op.tokenType = NOOP;
 
-    string num = primary();
+    PrimaryNode node= primary();
+    string num = node.index;
     tempNode.num1 = num;
+    if(node.isIndex)
+    {
+        tempNode.isIndex1 = true;
+    }
 
     Lexer::Token t = peek();
     Lexer::Token optr;
@@ -488,11 +519,16 @@ AssignStmtNode Parser::arithmetic()
     if (t.tokenType == PLUS || t.tokenType == MINUS || t.tokenType == MULT || t.tokenType == DIV)
     {
         optr = op();
-        num2 = primary();
+        node = primary();
+        num2 = node.index;
         num2Exist = true;
 
         tempNode.op = optr;
         tempNode.num2 = num2;
+        if(node.isIndex)
+        {
+            tempNode.isIndex2 = true;
+        }
     }
 
 
@@ -521,6 +557,7 @@ AssignStmtNode Parser::condition()
             if (id == var.id)
             {
                 node.num1 = to_string(i);
+                node.isIndex1 = true;
                 break;
             }
         }
@@ -528,7 +565,13 @@ AssignStmtNode Parser::condition()
 
     t = relop();
     node.op = t;
-    node.num2 = primary();
+    
+    PrimaryNode primaryNode = primary();
+    node.num2 = primaryNode.index;
+    if(primaryNode.isIndex)
+    {
+        node.isIndex2 = true;
+    }
 
     return node;
 }
@@ -607,10 +650,10 @@ ForStmtNode Parser::for_stmt()
     return node;
 }
 
-string Parser::primary()
+PrimaryNode Parser::primary()
 {
     // parserDebug("primary");
-
+    PrimaryNode primary;
     Lexer lexer;
     Lexer::Token t = lexer.getToken();
     if (t.tokenType != ID && t.tokenType != NUM)
@@ -619,7 +662,8 @@ string Parser::primary()
     }
     else if (t.tokenType == NUM)
     {
-        return t.lexeme;
+        primary.index = t.lexeme;
+        return primary;
     }
     else if (t.tokenType == ID)
     {
@@ -634,7 +678,9 @@ string Parser::primary()
                 break;
             }
         }
-        return index;
+        primary.index = index;
+        primary.isIndex = true;
+        return primary;
     }
 }
 

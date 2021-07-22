@@ -1,0 +1,17 @@
+print "Welcome_To_My_Vending_Machine_Program"
+print "Would_you_like:"
+print "1._Water_-$1"
+print "2._Sprite_-$2"
+print "3._Coke_-$2"
+water = 1
+sprite = 2
+coke = 2
+selected = 1
+total = 0
+for ( i = 1 , i <= 5 , 1 )
+{
+if selected == 1
+{
+total = total + 1
+}
+}

@@ -29,14 +29,19 @@ void execute(InstructionNode *instructions)
         if (temp->type == ASSIGN)
         {
             Variable *var = &Parser::variableList[temp->assign.lhsIndex];
+            // cout << "var: " << var->id << endl;
+            // cout << "seg fault: " << var->value << endl;
             if (temp->assign.op.tokenType == NOOP)
             {
                 var->value = temp->assign.rhs1;
             }
             else
             {
-                int op1 = stoi(temp->assign.rhs1);
+                // cout << "op1String: " << temp->assign.rhs1 << endl; 
+                int op1 = stoi(temp->assign.rhs1); //TODO: Account for IDs here so can't do h = h + 1 rn
+                // cout << "op1: " << op1 << endl;
                 int op2 = stoi(temp->assign.rhs2);
+                // cout << "op2: " << op2 << endl;
                 Lexer::Token optr = temp->assign.op;
                 int ans = 0;
                 if (optr.tokenType == PLUS)

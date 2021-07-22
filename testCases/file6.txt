@@ -1,0 +1,4 @@
+h = 2
+print h
+h = h + 1
+print h

@@ -1,4 +1,32 @@
-0
+hello_world
+this_is_a_test
+var: a
+seg fault: 
+var: c
+seg fault: 
+var: d
+seg fault: 
+op1String: 4
+op1: 4
+op2: 6
+var: e
+seg fault: 
+op1String: 4
+op1: 4
+op2: 6
+var: f
+seg fault: 
+op1String: 6
+op1: 6
+op2: 4
+var: g
+seg fault: 
+op1String: 6
+op1: 6
+op2: 4
+assignment
+5
+10
+24
 2
-4
-6
+1
