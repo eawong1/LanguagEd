@@ -38,10 +38,27 @@ void execute(InstructionNode *instructions)
             else
             {
                 // cout << "op1String: " << temp->assign.rhs1 << endl; 
-                int op1 = stoi(temp->assign.rhs1); //TODO: Account for IDs here so can't do h = h + 1 rn
-                // cout << "op1: " << op1 << endl;
-                int op2 = stoi(temp->assign.rhs2);
-                // cout << "op2: " << op2 << endl;
+                int op1 = 0;
+                int op2 = 0;
+                if(temp->assign.isIndex1)
+                {
+                    Variable op = Parser::variableList[stoi(temp->assign.rhs1)];
+                    op1 = stoi(op.value);
+                }
+                else
+                {
+                    op1 = stoi(temp->assign.rhs1); //TODO: Account for IDs here so can't do h = h + 1 rn
+                }
+                if(temp->assign.isIndex2)
+                {
+                    Variable op = Parser::variableList[stoi(temp->assign.rhs2)];
+                    op2 = stoi(op.value);
+                }
+                else
+                {
+                    op2 = stoi(temp->assign.rhs2);
+                }
+
                 Lexer::Token optr = temp->assign.op;
                 int ans = 0;
                 if (optr.tokenType == PLUS)
@@ -98,9 +115,14 @@ void execute(InstructionNode *instructions)
                 }
 
                 int num2 = 0;
-                if(!temp->cjmp.num2Literal)
+                if(!temp->cjmp.num2Literal) //*looks like num2Literal hasn't been set yet in assignstmt
                 {
+                    //!Line below is causing an error
+                    cout << "index: " << num2Index << endl;
+                    cout << "size: " << Parser::variableList.size() << endl;
+                    cout << "stuff: " << Parser::variableList[num2Index].value << endl;
                     num2 = stoi(Parser::variableList[num2Index].value); //TODO: figure out what to do when num2 is a literal number and not an ID
+                    cout << "it gets here" << endl;
                 }
                 else
                 {

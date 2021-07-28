@@ -188,6 +188,8 @@ InstructionNode* Parser::assign_stmt()
         assignment->assign.rhs1 = num1;
         assignment->assign.rhs2 = num2;
         assignment->assign.op = op;
+        assignment->assign.isIndex1 = tempNode.isIndex1;
+        assignment->assign.isIndex2 = tempNode.isIndex2;
   
     }
     else if (t.tokenType == STRING)
@@ -224,7 +226,6 @@ InstructionNode* Parser::if_stmt()
 
     AssignStmtNode node = condition();
    
-
     ifCondition->cjmp.num1Index = stoi(node.num1);
     ifCondition->cjmp.num2Index = stoi(node.num2);
     ifCondition->cjmp.op = node.op;

@@ -2,3 +2,6 @@ h = 2
 print h
 h = h + 1
 print h
+a = 4
+c = a + h
+print c

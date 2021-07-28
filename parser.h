@@ -54,8 +54,9 @@ struct InstructionNode
         string rhs1;
         string rhs2;
         Lexer::Token op;
-        bool isIndex = false; //*Have to implement this in rest of code but this is so that arithmetic function knows if it is adding actual num or an index
-
+        bool isIndex1 = false; //*Have to implement this in rest of code but this is so that arithmetic function knows if it is adding actual num or an index
+        bool isIndex2 = false;
+        
     } assign;
     
     struct
