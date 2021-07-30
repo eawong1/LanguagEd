@@ -188,6 +188,7 @@ InstructionNode* Parser::assign_stmt()
         assignment->assign.rhs1 = num1;
         assignment->assign.rhs2 = num2;
         assignment->assign.op = op;
+        //isIndex is used so we can do operations like h = h + 1
         assignment->assign.isIndex1 = tempNode.isIndex1;
         assignment->assign.isIndex2 = tempNode.isIndex2;
   
@@ -226,6 +227,14 @@ InstructionNode* Parser::if_stmt()
 
     AssignStmtNode node = condition();
    
+    if(!node.isIndex1)
+    {
+        ifCondition->cjmp.num1Literal = true;
+    }
+    if(!node.isIndex2)
+    {
+        ifCondition->cjmp.num2Literal = true;
+    }
     ifCondition->cjmp.num1Index = stoi(node.num1);
     ifCondition->cjmp.num2Index = stoi(node.num2);
     ifCondition->cjmp.op = node.op;

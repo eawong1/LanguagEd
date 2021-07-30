@@ -39,7 +39,7 @@ struct ForStmtNode
     string incrementVal;
 };
 
-struct PrimaryNode //TODO: set this as the return type for primary and then rework code accordingly
+struct PrimaryNode 
 {
     string index;
     bool isIndex = false;

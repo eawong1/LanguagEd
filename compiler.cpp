@@ -24,7 +24,7 @@ void execute(InstructionNode *instructions)
     while (temp != NULL)
     {
         bool jumped = false;
-        // cout << "Type:  " << temp->type << endl;
+        cout << "Type:  " << temp->type << endl;
         // cout << "it gets here" << endl;
         if (temp->type == ASSIGN)
         {
@@ -92,6 +92,7 @@ void execute(InstructionNode *instructions)
             int num2Index = temp->cjmp.num2Index;
             Lexer::Token t = temp->cjmp.op;
 
+
             // cout << "numIndex: " << numIndex << endl;
             // cout << "num2Index: " << num2Index << endl;
             // cout << "auto: " << temp->cjmp.autoFalse << endl;
@@ -108,6 +109,8 @@ void execute(InstructionNode *instructions)
                 if(!temp->cjmp.num1Literal)
                 {
                     num = stoi(Parser::variableList[numIndex].value);
+                    // cout << "id: " << Parser::variableList[numIndex].id << endl;
+                    // cout << "value: " << Parser::variableList[numIndex].value << endl;
                 }
                 else 
                 {
@@ -115,14 +118,9 @@ void execute(InstructionNode *instructions)
                 }
 
                 int num2 = 0;
-                if(!temp->cjmp.num2Literal) //*looks like num2Literal hasn't been set yet in assignstmt
+                if(!temp->cjmp.num2Literal) 
                 {
-                    //!Line below is causing an error
-                    cout << "index: " << num2Index << endl;
-                    cout << "size: " << Parser::variableList.size() << endl;
-                    cout << "stuff: " << Parser::variableList[num2Index].value << endl;
-                    num2 = stoi(Parser::variableList[num2Index].value); //TODO: figure out what to do when num2 is a literal number and not an ID
-                    cout << "it gets here" << endl;
+                    num2 = stoi(Parser::variableList[num2Index].value); 
                 }
                 else
                 {
@@ -149,11 +147,13 @@ void execute(InstructionNode *instructions)
                 {
                     // cout << "equal to" << endl;
                     result = (num == num2);
+                    // cout << result << endl;
                 }
                 else if (t.tokenType == NOT_EQUAL)
                 {
                     result = (num != num2);
                 }
+                // cout << endl;
             }
             else
             {
@@ -171,6 +171,7 @@ void execute(InstructionNode *instructions)
                     temp = temp->cjmp.target;
                 }
             }
+
           
         }
         else if (temp->type == JMP)
